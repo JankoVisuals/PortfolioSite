@@ -3,7 +3,8 @@ import nodemailer from 'nodemailer';
 import { createClient } from '@supabase/supabase-js';
 const { SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY,GMAIL_ADDRESS,GMAIL_APP_PASSWORD }=process.env as Record<string,string>;
 const supabase=createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-const MAP:Record<string,{filename:string}>={hookovi:{filename:'hookovi.pdf'},presets:{filename:'presets.zip'},lut:{filename:'lut.cube'}};
+const MAP:Record<string,{filename:string}> = {
+  sfx:{filename:'SFX.zip'},};
 export default async function handler(req:VercelRequest,res:VercelResponse){
  if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
  const {email,resource}=req.body||{}; if(!email||!resource||!MAP[resource]) return res.status(400).json({error:'Invalid payload'});
