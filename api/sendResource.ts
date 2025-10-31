@@ -31,19 +31,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log(`[sendResource] ${msg}`, extra ?? '');
 
   try {
-    // podrži i JSON i urlencoded body (ako frontend slučajno pošalje string)
+    // tolerate JSON string bodies
     let body: any = req.body;
     if (typeof body === 'string') {
       try { body = JSON.parse(body); } catch {}
     }
 
-    const email = body?.email as string | undefined;
-    const resource = (body?.resource as string | undefined) ?? 'sfx';
-
-    log('incoming', { email, resource });
-
+    const email = (body?.email as string || '').trim();
+    const resource = (body?.resource as string) || 'sfx';
     if (!email) return res.status(400).json({ error: 'Email je obavezan.' });
 
+    // Mapiranje (za sada uvek SFX.zip)
     const MAP: Record<string, MapEntry> = { sfx: { filename: 'SFX.zip' } };
     const picked = MAP[resource] || MAP.sfx;
     const filename = picked.filename;
@@ -53,42 +51,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const SUPABASE_URL = mustGet('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = mustGet('SUPABASE_SERVICE_ROLE_KEY');
     const BUCKET = process.env.SUPABASE_BUCKET_RESOURCES || 'resources';
-
     const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // 1) Signed URL
-    const { data: signed, error: signErr } = await sb.storage
-      .from(BUCKET)
+    const { data: signed, error: signErr } = await sb
+      .storage.from(BUCKET)
       .createSignedUrl(filename, 60 * 60);
-
     if (signErr || !signed?.signedUrl) {
       log('signed url error', signErr ?? {});
       return res.status(500).json({ error: 'Ne mogu da generišem link za preuzimanje.' });
     }
 
-    // 2) DB insert (blokirajući, sa uuid)
+    // 2) DB insert — robust (full → fallback)
     const { ua, ip } = getClientMeta(req);
-    const insertRes = await sb
-      .from('resource_requests')
-      .insert({
-        uuid: (globalThis as any).crypto?.randomUUID?.() ?? undefined, // ako kolona postoji i nema default
+    let inserted = false;
+
+    // pokušaj 1: “full” set (ako postoje kolone filename/created_at/uuid)
+    try {
+      const full = await sb.from('resource_requests').insert({
+        uuid: (globalThis as any).crypto?.randomUUID?.(), // ignoriše se ako kolona ne postoji
         email,
         resource_slug: resourceSlug,
-        filename,
+        filename,                          // ignoriše se ako kolona ne postoji (u SUPA v2 insert pukne -> hvatamo grešku)
         user_agent: ua,
         ip,
-        created_at: new Date().toISOString(),
-      })
-      .select(); // ← blokirajuće: vrati grešku ako ne uspe
+        created_at: new Date().toISOString(), // OK i ako tabela ima default
+      }).select();
 
-    if (insertRes.error) {
-      log('insert error', insertRes.error);
-      return res.status(500).json({ error: 'DB insert failed', details: insertRes.error.message });
-    } else {
-      log('insert ok', insertRes.data);
+      if (full.error) throw full.error;
+      inserted = true;
+      log('insert ok (full)', full.data);
+    } catch (e: any) {
+      log('insert error (full) → trying fallback', e?.message || e);
+      // pokušaj 2: minimalni set kolona koje sigurno imaš
+      try {
+        const minimal = await sb.from('resource_requests').insert({
+          email,
+          resource_slug: resourceSlug,
+          user_agent: ua,
+          ip,
+          created_at: new Date().toISOString(),
+        }).select();
+        if (minimal.error) throw minimal.error;
+        inserted = true;
+        log('insert ok (fallback)', minimal.data);
+      } catch (e2: any) {
+        log('insert error (fallback) — giving up', e2?.message || e2);
+        // NE blokiramo korisnika ako log ne uspe — samo idemo dalje
+      }
     }
 
-    // 3) Email
+    // 3) Email (uvek pokušavamo poslati, bez obzira na insert)
     const GMAIL_ADDRESS = mustGet('GMAIL_ADDRESS');
     const GMAIL_APP_PASSWORD = mustGet('GMAIL_APP_PASSWORD');
 
@@ -124,8 +137,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       replyTo: GMAIL_ADDRESS,
     });
 
-    log('done', { ms: Date.now() - t0, email, resourceSlug });
-    return res.status(200).json({ ok: true });
+    log('done', { ms: Date.now() - t0, email, resourceSlug, inserted });
+    return res.status(200).json({ ok: true, logged: inserted });
   } catch (err: any) {
     console.error('[sendResource] fatal', err);
     return res.status(500).json({ error: 'Došlo je do greške.', details: err?.message });
