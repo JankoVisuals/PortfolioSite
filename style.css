@@ -33,7 +33,7 @@ body {
 
 /* Pulsing purple glow background */
 .bg-glow {
-  position: absolute;
+  position: fixed;   /* bilo absolute -> sad fiksno */
   inset: 0;
   display: flex;
   align-items: center;
