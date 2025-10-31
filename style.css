@@ -172,13 +172,14 @@ body {
 /* SUBPAGE LAYOUT */
 .page {
   min-height: 100dvh;
-  background-color: var(--bg);
-  color: var(--text);
+  background-color: #000;
+  color: #fff;
   display: flex;
   flex-direction: column;
   position: relative;
   padding: 24px;
-  overflow: hidden;
+  overflow-x: hidden;   /* zadrži zaštitu po širini */
+  overflow-y: auto;     /* >>> dozvoli skrol */
 }
 
 .page-inner {
