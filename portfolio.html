@@ -6,9 +6,14 @@
   <title>Portfolio • Janko Visuals Produkcija</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="page">
+  <!-- BG Glow -->
   <div class="bg-glow"><div class="bg-glow-circle"></div></div>
+
   <div class="page-inner">
+
+    <!-- Top Bar -->
     <div class="top-bar">
       <a class="back-btn" href="index.html">←</a>
       <div class="section-heading">
@@ -19,13 +24,122 @@
           <line x1="8" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" />
         </svg>
         <div class="section-title">Portfolio</div>
-        <div class="section-desc">Kratki showcase komercijalnih videa i brend projekata.</div>
+        <div class="section-desc">Komercijalni radovi, brendirani Reels, događaji i lifestyle produkcija.</div>
       </div>
     </div>
+
+    <!-- Featured Video -->
     <div class="content-block">
-      <div class="content-heading">Izdvojeni radovi</div>
-      <div class="content-text">Ovde će doći embed tvojih najboljih radova (Serbia Business Run, Sancrea, Tattoo Bar...).</div>
+      <div class="content-heading">Izdvojeno</div>
+      <div class="video-wrapper">
+        <!-- Placeholder embed (menjamo posle stvarnim videom) -->
+        <iframe
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title="Featured Video"
+          frameborder="0"
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <p class="content-text">Promo video za događaj — brz rad, terenska produkcija i isporuka istog dana.</p>
     </div>
+
+    <!-- Projects Grid -->
+    <div class="content-block">
+      <div class="content-heading">Radovi</div>
+
+      <div class="grid-projects">
+
+        <a class="project-card" href="#" target="_blank">
+          <div class="project-thumb"></div>
+          <div class="project-title">Serbia Business Run</div>
+          <div class="project-meta">Event • 2024</div>
+        </a>
+
+        <a class="project-card" href="#" target="_blank">
+          <div class="project-thumb"></div>
+          <div class="project-title">Sancrea Interiors</div>
+          <div class="project-meta">Product / Interiors</div>
+        </a>
+
+        <a class="project-card" href="#" target="_blank">
+          <div class="project-thumb"></div>
+          <div class="project-title">Tattoo Bar</div>
+          <div class="project-meta">Brand Content</div>
+        </a>
+
+        <a class="project-card" href="#" target="_blank">
+          <div class="project-thumb"></div>
+          <div class="project-title">The Place</div>
+          <div class="project-meta">Commercial</div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="content-block">
+      <div class="content-heading">Još radova</div>
+      <p class="content-text">
+        Redovno objavljujem projekte i behind-the-scenes sadržaj.
+      </p>
+      <a class="back-btn" href="https://www.instagram.com/janko.visuals" target="_blank">Instagram</a>
+    </div>
+
   </div>
+
+<style>
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+}
+.video-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-projects {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 12px;
+}
+
+.project-card {
+  text-decoration: none;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  padding: 10px;
+  border-radius: 12px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-thumb {
+  width: 100%;
+  height: 90px;
+  border-radius: 8px;
+  background: rgba(147,51,234,.22);
+}
+
+.project-title {
+  font-size: .86rem;
+  font-weight: 600;
+}
+
+.project-meta {
+  font-size: .7rem;
+  opacity: .6;
+}
+</style>
+
 </body>
 </html>
