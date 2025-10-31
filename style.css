@@ -236,3 +236,5 @@ body {
 }
 .btn { cursor:pointer; font-weight:800; }
 .msg { font-size:.88rem; color:var(--muted); min-height:1.2em; }
+
+.nowrap { white-space: nowrap; }
