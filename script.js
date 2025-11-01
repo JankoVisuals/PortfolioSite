@@ -3,7 +3,7 @@
   const videos = document.querySelectorAll("video.reel, video.feature");
   if (!videos.length) return;
 
-  // Važno: postaviti atribute PRE učitavanja (za iOS/Android autoplay)
+  // Postavi atribute PRE učitavanja (mobilni autoplay zaht.)
   videos.forEach((v) => {
     try {
       v.setAttribute("muted", "");
@@ -11,17 +11,16 @@
       v.muted = true;
       v.playsInline = true;
       v.loop = true;
+      v.dataset.sound = "off"; // UI: krećemo kao muted
     } catch {}
   });
 
-  // IntersectionObserver za pauzu van pogleda
+  // IntersectionObserver – play/pause po vidljivosti
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       const v = e.target;
       if (e.isIntersecting) {
-        // pokušaj play sa fallback retry-jem
         v.play().catch(() => {
-          // neki browseri traže mali delay
           setTimeout(() => v.play().catch(()=>{}), 50);
         });
       } else {
@@ -31,17 +30,15 @@
   }, { threshold: 0.35 });
 
   videos.forEach((v) => {
-    // Autoplay na prvom mogućem eventu
     const tryPlay = () => v.play().catch(()=>{});
     v.addEventListener("loadedmetadata", tryPlay, { once: true });
     v.addEventListener("canplay", tryPlay, { once: true });
-    // dodatni mikro delay za neke Android webview-e
     setTimeout(tryPlay, 0);
 
-    // Tap na video (u gridu) — mute toggle
+    // Tap na video (grid/feature) — mute toggle
     v.addEventListener("click", () => {
       v.muted = !v.muted;
-      v.dataset.sound = v.muted ? "off" : "on";
+      v.dataset.sound = v.muted ? "off" : "on"; // CSS menja ikonu
       v.play().catch(()=>{});
     });
 
@@ -53,7 +50,7 @@
     btn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       const wrap = btn.closest(".reel-wrap, .feature-wrap");
-      const v = wrap.querySelector("video");
+      const v = wrap?.querySelector("video");
       if (!v) return;
       v.muted = !v.muted;
       v.dataset.sound = v.muted ? "off" : "on";
@@ -61,20 +58,17 @@
     });
   });
 
-  // Ako tab ode u background, pauziraj; vrati kad se vrati
+  // Kada tab ode u background → pauziraj; vrati kad se vrati
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      videos.forEach(v => v.pause());
-    } else {
-      videos.forEach(v => {
-        if (v.muted) v.play().catch(()=>{});
-      });
-    }
+    videos.forEach(v => {
+      if (document.hidden) v.pause();
+      else if (v.muted) v.play().catch(()=>{});
+    });
   });
 })();
 
 
-// ===== Fullscreen overlay (TikTok stil) =====
+// ===== Fullscreen overlay (TikTok stil + global mute na ulasku) =====
 (function () {
   const overlay = document.getElementById("fs");
   if (!overlay) return;
@@ -84,7 +78,7 @@
   const fsSub   = document.getElementById("fsSub");
   const closeBtn = overlay.querySelector(".fs-close");
 
-  // Lista videa sa stranice (redosled: feature pa grid)
+  // Čitamo projekte iz DOM-a (redosled: feature pa grid)
   const nodes = [
     ...document.querySelectorAll(".feature-wrap"),
     ...document.querySelectorAll(".reel-card")
@@ -100,7 +94,7 @@
   // Helpers: global control
   function pauseAllVideos() {
     document.querySelectorAll("video").forEach(v => {
-      try { v.muted = true; v.pause(); } catch {}
+      try { v.muted = true; v.dataset.sound = "off"; v.pause(); } catch {}
     });
   }
   function resumeGridAutoplay() {
@@ -108,7 +102,9 @@
       try {
         v.setAttribute("muted", "");
         v.setAttribute("playsinline", "");
-        v.muted = true; v.playsInline = true;
+        v.muted = true;
+        v.dataset.sound = "off"; // UI mute ikone vraćene u mute
+        v.playsInline = true;
         v.play().catch(()=>{ setTimeout(()=>v.play().catch(()=>{}), 50); });
       } catch {}
     });
@@ -119,14 +115,13 @@
   function openAt(i) {
     idx = Math.max(0, Math.min(items.length - 1, i));
 
-    // ⛔ zaustavi sve ostale videe pre fullscreen-a
-    pauseAllVideos();
+    // 1) Zaustavi SVE i resetuj UI mute stanje u gridu
+    pauseAllVideos(); // -> svi muted + data-sound="off"
 
+    // 2) Podesi fullscreen video
     const { src, title, sub } = items[idx];
-
-    // Podesi fsVideo atribute pre učitavanja (autoplay sa zvukom)
     fsVideo.removeAttribute("muted");
-    fsVideo.muted = false;
+    fsVideo.muted = false;         // fullscreen sa zvukom
     fsVideo.setAttribute("playsinline", "");
     fsVideo.playsInline = true;
     fsVideo.loop = true;
@@ -139,21 +134,19 @@
     overlay.classList.add("active");
     document.body.classList.add("no-scroll");
 
-    // mikro odlaganje da browser primeni pauzu drugima
-    setTimeout(() => {
-      fsVideo.play().catch(()=>{ /* iOS fallback */ });
-    }, 0);
+    // Mikro delay – obezbedi da pauze budu primenjene pre play-a
+    setTimeout(() => fsVideo.play().catch(()=>{}), 0);
   }
 
   function closeFS() {
     try { fsVideo.pause(); } catch {}
     fsVideo.removeAttribute("src");
-    fsVideo.load(); // očisti buffer (neki Safari bugovi)
+    fsVideo.load(); // očisti buffer (Safari bugovi)
 
     overlay.classList.remove("active");
     document.body.classList.remove("no-scroll");
 
-    // ✅ vrati grid autoplay (mute)
+    // Vrati grid autoplay (mute) + UI mutiran
     resumeGridAutoplay();
   }
 
@@ -182,7 +175,7 @@
     if (e.target === overlay) closeFS(); // klik van videa -> zatvori
   });
 
-  // Swipe up/down
+  // Swipe up/down (TikTok navigacija)
   let startY = 0;
   overlay.addEventListener("touchstart", (e) => { startY = e.changedTouches[0].clientY; }, { passive:true });
   overlay.addEventListener("touchend", (e) => {
@@ -192,7 +185,7 @@
     else if (delta > 0 && idx > 0) openAt(idx - 1);
   }, { passive:true });
 
-  // ESC / arrows
+  // ESC / arrows (desktop)
   window.addEventListener("keydown", (e) => {
     if (!overlay.classList.contains("active")) return;
     if (e.key === "Escape") closeFS();
