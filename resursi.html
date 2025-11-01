@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Besplatni resursi • Janko Visuals Produkcija</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body class="page">
   <div class="bg-glow"><div class="bg-glow-circle"></div></div>
@@ -16,38 +17,16 @@
           <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round" />
         </svg>
         <div class="section-title">Besplatni resursi</div>
-        <div class="section-desc">Preuzmi hookove, LUT ili presete — stižu na email.</div>
+        <div class="section-desc">Trenutno: SFX pack</div>
       </div>
     </div>
+
     <div class="content-block">
-      <div class="content-heading">Izaberi resurs</div>
-      <form id="free-form" class="form">
-        <label>Resurs
-          <select name="resource" class="select" required>
-  <option value="sfx">SFX Sound Pack (ZIP)</option>
-</select>
-        </label>
-        <label>Email
-          <input name="email" type="email" class="input" required placeholder="tvoj@email.com" />
-        </label>
-        <button class="btn" type="submit">Pošalji</button>
-        <div id="msg" class="msg"></div>
-      </form>
+      <div class="content-heading">Preuzmi</div>
+      <div class="content-text">
+        <a class="contact-item nowrap" href="mailto:jankovisuals@gmail.com?subject=SFX%20pack%20request&body=Zdravo%20Janko,%20želim%20SFX%20pack.">Pošalji zahtev za SFX pack</a>
+      </div>
     </div>
   </div>
-  <script>
-  (function(){
-    const f=document.getElementById('free-form'),m=document.getElementById('msg');
-    f.addEventListener('submit',async(e)=>{
-      e.preventDefault(); m.textContent='Šaljem...';
-      const data=Object.fromEntries(new FormData(f).entries());
-      try{
-        const r=await fetch('/api/sendResource',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-        const j=await r.json(); if(!r.ok) throw new Error(j.error||'Greška');
-        m.textContent='Proveri inbox.'; f.reset();
-      }catch(err){ m.textContent='Nije uspelo.'; console.error(err); }
-    });
-  })();
-  </script>
 </body>
 </html>
