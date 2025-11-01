@@ -22,26 +22,27 @@
       </div>
     </div>
 
-    <div class="content-block">
-      <div class="content-heading">Izaberi resurs</div>
-      <form id="resursi-form" class="form" novalidate>
-        <div class="form-row">
-          <label for="resource">Resurs</label>
-          <select id="resource" name="resource" required>
-            <!-- Za sada samo jedna opcija, ali dropdown je spreman za još -->
-            <option value="sfx">SFX Sound Pack (ZIP)</option>
-          </select>
-        </div>
+    <div class="content-block form-card">
+  <div class="content-heading kicker">IZABERI RESURS</div>
 
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="tvoj@email.com" required />
-        </div>
-
-        <button class="btn" type="submit">Pošalji</button>
-        <div id="status" class="status"></div>
-      </form>
+  <form id="resursi-form" class="form" novalidate>
+    <div class="form-row">
+      <label for="resource">Resurs</label>
+      <select id="resource" name="resource" required>
+        <option value="sfx">SFX Sound Pack (ZIP)</option>
+      </select>
     </div>
+
+    <div class="form-row">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="tvoj@email.com" required />
+    </div>
+
+    <button class="btn" type="submit">Pošalji</button>
+    <div id="status" class="status"></div>
+  </form>
+</div>
+
   </div>
 </body>
 </html>

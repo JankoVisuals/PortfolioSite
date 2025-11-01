@@ -1,23 +1,15 @@
 /* Base reset */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body{background:#000;color:#fff;font-family:'Satoshi',system-ui,-apple-system,BlinkMacSystemFont,Inter,Roboto,sans-serif;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;padding:24px;overflow:hidden}
+body.no-scroll{overflow:hidden}
 
 /* BG glow — jači + fallback za mobile */
 .bg-glow{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
-.bg-glow-circle{
-  width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;
-  background:rgba(147,51,234,.35); /* jači */
-  filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite
-}
-/* fallback sloj (za slučajeve kad filter/blur oslabi na nekim telefonima) */
-body::after{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient( circle at 50% 45%,
-    rgba(147,51,234,.18), rgba(0,0,0,0) 55% );
-}
+.bg-glow-circle{width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;background:rgba(147,51,234,.35);filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(147,51,234,.18),rgba(0,0,0,0) 55%)}
 @keyframes pulseGlow{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 
-/* Home wrapper */
+/* Home */
 .wrapper{width:100%;max-width:360px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px}
 .brand{display:flex;flex-direction:column;align-items:center;text-align:center}
 .brand-title{color:#fff;font-size:1rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;line-height:1.2}
@@ -29,7 +21,7 @@ body::after{
 .menu-card:active{transform:scale(.97)}
 .menu-card-hoverlayer{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 0% 0%,rgba(147,51,234,.28) 0%,rgba(0,0,0,0) 60%);opacity:0;transition:opacity .2s ease}
 .menu-card:hover .menu-card-hoverlayer{opacity:1}
-.icon{width:28px;height:28px;margin-bottom:10px;color:rgb(168,85,247);fill:currentColor;flex-shrink:0;transform-origin:center}
+.icon{width:28px;height:28px;margin-bottom:10px;color:rgb(168,85,247);fill:currentColor}
 .menu-label{font-size:.9rem;font-weight:500;color:#fff}
 .menu-card:hover .menu-label{color:rgb(216,180,254)}
 
@@ -45,18 +37,20 @@ body::after{
 .content-block{border-radius:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:16px}
 .content-heading{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:8px}
 .content-text{font-size:.9rem;line-height:1.4;color:#fff}
+
+/* Links / form common */
 .link-row{display:flex;flex-direction:column;gap:8px}
 .contact-item{display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.05);border:1px solid rgba(147,51,234,.4);border-radius:.8rem;padding:12px 16px;text-decoration:none;color:#fff}
 .contact-label{font-size:.7rem;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.08em;text-transform:uppercase}
 .contact-value{font-size:.9rem;font-weight:500;color:#fff;word-break:break-all}
 .nowrap{white-space:nowrap}
 
-/* Featured — 9:16 traženo */
+/* Featured 9:16 */
 .feature-wrap{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
-.feature-wrap::before{content:"";display:block;padding-top:177.78%} /* 9:16 */
+.feature-wrap::before{content:"";display:block;padding-top:177.78%}
 .feature{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
 
-/* Grid reels — 9:16 */
+/* Grid reels 9:16 */
 .video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .reel-card{display:flex;flex-direction:column;gap:8px}
 .reel-wrap{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
@@ -66,20 +60,89 @@ body::after{
 .reel-title{font-size:.9rem;font-weight:600}
 .reel-sub{font-size:.75rem;color:rgba(255,255,255,.6)}
 
-/* Mute dugme */
-.reel-btn{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:999px;color:#fff;padding:8px 10px;font-size:.8rem;backdrop-filter:blur(6px)}
+/* Kontrole (grid/feature) */
+.video-controls{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;z-index:10}
+.reel-btn{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:999px;color:#fff;padding:8px 10px;font-size:.8rem;backdrop-filter:blur(6px)}
 .icon-sound::before{content:"🔇"}
-video[data-sound="on"] + .reel-btn .icon-sound::before{content:"🔊"}
-.placeholder .reel-wrap{display:flex;align-items:center;justify-content:center}
-.placeholder-inner{color:rgba(255,255,255,.5);font-size:.85rem}
+video[data-sound="on"] ~ .video-controls .icon-sound::before{content:"🔊"}
+.icon-full::before{content:"⤢";font-size:.9rem}
 
-/* Form (resursi) */
-.form{display:flex;flex-direction:column;gap:12px}
-.form-row{display:flex;flex-direction:column;gap:6px}
-label{font-size:.8rem;color:rgba(255,255,255,.7)}
-select,input[type="email"]{
-  width:100%;padding:12px;border-radius:10px;border:1px solid rgba(147,51,234,.35);
-  background:rgba(255,255,255,.05);color:#fff;outline:none
+/* Fullscreen overlay (TikTok stil) */
+.fs-overlay{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:999}
+.fs-overlay.active{display:flex}
+.fs-video-wrap{position:relative;width:100%;height:100%}
+#fsVideo{position:absolute;inset:0;margin:auto;width:100%;height:100%;object-fit:contain;background:#000}
+/* caption */
+.fs-caption{position:absolute;left:12px;bottom:12px;z-index:100;color:#fff;text-shadow:0 1px 16px rgba(0,0,0,.65)}
+.fs-caption #fsTitle{font-weight:700}
+.fs-caption #fsSub{opacity:.7;font-size:.9rem;margin-top:2px}
+/* close */
+.fs-close{position:absolute;top:14px;right:14px;z-index:120;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.4);color:#fff;border-radius:999px;font-size:1rem;line-height:1;padding:10px 12px}
+
+/* ==== Besplatni resursi: forma (glass card) ==== */
+.form-card{
+  border-radius:16px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  padding:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.25) inset, 0 10px 25px rgba(0,0,0,.15);
 }
-button.btn{padding:12px 16px;border-radius:12px;border:1px solid rgba(147,51,234,.5);background:rgba(147,51,234,.25);color:#fff;font-weight:600}
-.status{font-size:.8rem;color:rgba(255,255,255,.6);min-height:1.2em}
+
+.form{display:flex;flex-direction:column;gap:14px}
+.form-row{display:flex;flex-direction:column;gap:8px}
+
+label{
+  font-size:.8rem;
+  color:rgba(255,255,255,.75);
+  letter-spacing:.03em;
+}
+
+select,
+input[type="email"]{
+  width:100%;
+  height:44px;
+  padding:0 12px;
+  border-radius:12px;
+  border:1px solid rgba(147,51,234,.45);
+  background:rgba(0,0,0,.35);
+  color:#fff;
+  outline:none;
+}
+
+select{
+  -webkit-appearance:none;appearance:none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%),
+    linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 18px,
+    calc(100% - 12px) 18px;
+  background-size:6px 6px, 6px 6px;
+  background-repeat:no-repeat;
+}
+
+input::placeholder{color:rgba(255,255,255,.45)}
+
+button.btn{
+  width:100%;
+  height:46px;
+  border-radius:12px;
+  border:1px solid rgba(147,51,234,.6);
+  background:linear-gradient(180deg, rgba(147,51,234,.45), rgba(147,51,234,.25));
+  color:#fff;font-weight:700;letter-spacing:.02em
+}
+button.btn:active{transform:scale(.98)}
+
+.status{
+  font-size:.82rem;
+  color:rgba(255,255,255,.7);
+  min-height:1.2em;
+  margin-top:2px;
+}
+
+/* “IZABERI RESURS” heading u kartici */
+.content-heading.kicker{
+  color:rgba(255,255,255,.75);
+  font-weight:700;
+  letter-spacing:.1em;
+}
