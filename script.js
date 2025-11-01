@@ -41,6 +41,15 @@
   const fsSub   = document.getElementById("fsSub");
   const closeBtn = overlay.querySelector(".fs-close");
 
+  // --- helpers: kontrola grid videa ---
+  const gridVideos = document.querySelectorAll(".reel");
+  function pauseGridVideos() {
+    gridVideos.forEach(v => { v.muted = true; v.pause(); });
+  }
+  function resumeGridVideos() {
+    gridVideos.forEach(v => { v.muted = true; v.play().catch(()=>{}); });
+  }
+
   // Gradimo listu projekata iz DOM-a (redosled: feature, pa grid)
   const nodes = [
     ...document.querySelectorAll(".feature-wrap"),
@@ -59,10 +68,14 @@
   function openAt(i) {
     idx = Math.max(0, Math.min(items.length - 1, i));
     const { src, title, sub } = items[idx];
+
+    // ⛔ pauziraj sve grid videe pri ulasku u fullscreen
+    pauseGridVideos();
+
     fsVideo.src = src;
     fsTitle.textContent = title || "";
     fsSub.textContent = sub || "";
-    fsVideo.muted = false;           // zvuk uključen
+    fsVideo.muted = false;           // zvuk uključen u fullscreen-u
     fsVideo.playsInline = true;
     fsVideo.loop = true;
     fsVideo.currentTime = 0;
@@ -77,20 +90,22 @@
     fsVideo.pause();
     overlay.classList.remove("active");
     document.body.classList.remove("no-scroll");
+
+    // ✅ vrati grid u mute autoplay mod
+    resumeGridVideos();
   }
 
   // Klik na fullscreen dugme u gridu/feature
-  document.querySelectorAll(".fullscreen-btn").forEach((btn, buttonIndex) => {
+  document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      // nađi indeks po DOM nodu
       const block = btn.closest(".feature-wrap, .reel-card");
       const i = nodes.indexOf(block);
       openAt(i >= 0 ? i : 0);
     });
   });
 
-  // Takođe: klik direktno na video (celi blok) može da otvori fullscreen
+  // Dvoklik na video/tile otvara fullscreen
   document.querySelectorAll(".feature-wrap, .reel-card .reel-wrap").forEach((wrap) => {
     wrap.addEventListener("dblclick", () => {
       const block = wrap.closest(".feature-wrap, .reel-card");
@@ -102,8 +117,7 @@
   // Close
   closeBtn.addEventListener("click", closeFS);
   overlay.addEventListener("click", (e) => {
-    // tap bilo gde osim na video — zatvori
-    if (e.target === overlay) closeFS();
+    if (e.target === overlay) closeFS(); // klik izvan videa zatvara
   });
 
   // Swipe up/down za sledeći/prethodni
@@ -113,9 +127,9 @@
     endY = e.changedTouches[0].clientY;
     const delta = endY - startY;
     if (Math.abs(delta) < threshold) return;
-    if (delta < 0 && idx < items.length - 1) { // swipe up -> next
+    if (delta < 0 && idx < items.length - 1) {      // swipe up -> next
       openAt(idx + 1);
-    } else if (delta > 0 && idx > 0) {         // swipe down -> prev
+    } else if (delta > 0 && idx > 0) {              // swipe down -> prev
       openAt(idx - 1);
     }
   }, { passive:true });
@@ -158,53 +172,3 @@
     }
   });
 })();
-
-// Selektujemo sve grid videe
-const gridVideos = document.querySelectorAll(".reel");
-
-// Funkcija: mutiraj + pauziraj sve male videe
-function pauseGridVideos() {
-  gridVideos.forEach(v => {
-    v.muted = true;
-    v.pause();
-  });
-}
-
-// Funkcija: ponovo pokreni i mute za grid kad izađemo
-function resumeGridVideos() {
-  gridVideos.forEach(v => {
-    v.muted = true;
-    v.play().catch(()=>{});
-  });
-}
-
-// Kad se fullscreen otvori
-function openFullscreen(videoEl, title, sub) {
-  pauseGridVideos(); // 🛑 MUTIRAJ I STOPIRAJ GRID
-
-  const overlay = document.getElementById('fsOverlay');
-  const fsVideo = document.getElementById('fsVideo');
-
-  overlay.classList.add('active');
-  fsVideo.src = videoEl.src;
-  fsVideo.muted = false;
-  fsVideo.play();
-
-  document.getElementById('fsTitle').textContent = title;
-  document.getElementById('fsSub').textContent = sub;
-  document.body.classList.add("no-scroll");
-}
-
-// Kad zatvorimo fullscreen
-document.getElementById("fsClose").addEventListener("click", () => {
-  const overlay = document.getElementById('fsOverlay');
-  overlay.classList.remove('active');
-
-  const fsVideo = document.getElementById('fsVideo');
-  fsVideo.pause();
-  fsVideo.src = "";
-
-  document.body.classList.remove("no-scroll");
-
-  resumeGridVideos(); // ✅ vrati autoplay mute grid
-});
