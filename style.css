@@ -2,10 +2,20 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body{background:#000;color:#fff;font-family:'Satoshi',system-ui,-apple-system,BlinkMacSystemFont,Inter,Roboto,sans-serif;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;padding:24px;overflow:hidden}
 
-/* BG glow (fixed) */
+/* BG glow — jači + fallback za mobile */
 .bg-glow{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
-.bg-glow-circle{width:60vw;height:60vw;max-width:480px;max-height:480px;border-radius:9999px;background:rgba(147,51,234,.22);filter:blur(120px);animation:pulseGlow 4s ease-in-out infinite}
-@keyframes pulseGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+.bg-glow-circle{
+  width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;
+  background:rgba(147,51,234,.35); /* jači */
+  filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite
+}
+/* fallback sloj (za slučajeve kad filter/blur oslabi na nekim telefonima) */
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient( circle at 50% 45%,
+    rgba(147,51,234,.18), rgba(0,0,0,0) 55% );
+}
+@keyframes pulseGlow{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 
 /* Home wrapper */
 .wrapper{width:100%;max-width:360px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px}
@@ -41,21 +51,35 @@ body{background:#000;color:#fff;font-family:'Satoshi',system-ui,-apple-system,Bl
 .contact-value{font-size:.9rem;font-weight:500;color:#fff;word-break:break-all}
 .nowrap{white-space:nowrap}
 
-/* Featured 16:9 */
+/* Featured — 9:16 traženo */
 .feature-wrap{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
-.feature-wrap::before{content:"";display:block;padding-top:56.25%}
+.feature-wrap::before{content:"";display:block;padding-top:177.78%} /* 9:16 */
 .feature{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
 
-/* Grid 9:16 */
+/* Grid reels — 9:16 */
 .video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .reel-card{display:flex;flex-direction:column;gap:8px}
 .reel-wrap{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
 .reel-wrap::before{content:"";display:block;padding-top:177.78%}
 .reel{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
+.reel-meta{display:flex;flex-direction:column;gap:2px}
+.reel-title{font-size:.9rem;font-weight:600}
+.reel-sub{font-size:.75rem;color:rgba(255,255,255,.6)}
 
-/* Mute button */
+/* Mute dugme */
 .reel-btn{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:999px;color:#fff;padding:8px 10px;font-size:.8rem;backdrop-filter:blur(6px)}
 .icon-sound::before{content:"🔇"}
 video[data-sound="on"] + .reel-btn .icon-sound::before{content:"🔊"}
 .placeholder .reel-wrap{display:flex;align-items:center;justify-content:center}
 .placeholder-inner{color:rgba(255,255,255,.5);font-size:.85rem}
+
+/* Form (resursi) */
+.form{display:flex;flex-direction:column;gap:12px}
+.form-row{display:flex;flex-direction:column;gap:6px}
+label{font-size:.8rem;color:rgba(255,255,255,.7)}
+select,input[type="email"]{
+  width:100%;padding:12px;border-radius:10px;border:1px solid rgba(147,51,234,.35);
+  background:rgba(255,255,255,.05);color:#fff;outline:none
+}
+button.btn{padding:12px 16px;border-radius:12px;border:1px solid rgba(147,51,234,.5);background:rgba(147,51,234,.25);color:#fff;font-weight:600}
+.status{font-size:.8rem;color:rgba(255,255,255,.6);min-height:1.2em}
