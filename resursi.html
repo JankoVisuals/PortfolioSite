@@ -9,6 +9,7 @@
 </head>
 <body class="page">
   <div class="bg-glow"><div class="bg-glow-circle"></div></div>
+
   <div class="page-inner">
     <div class="top-bar">
       <a class="back-btn" href="index.html">←</a>
@@ -17,15 +18,29 @@
           <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round" />
         </svg>
         <div class="section-title">Besplatni resursi</div>
-        <div class="section-desc">Trenutno: SFX pack</div>
+        <div class="section-desc">Preuzmi izabrani fajl sa mejla.</div>
       </div>
     </div>
 
     <div class="content-block">
-      <div class="content-heading">Preuzmi</div>
-      <div class="content-text">
-        <a class="contact-item nowrap" href="mailto:jankovisuals@gmail.com?subject=SFX%20pack%20request&body=Zdravo%20Janko,%20želim%20SFX%20pack.">Pošalji zahtev za SFX pack</a>
-      </div>
+      <div class="content-heading">Izaberi resurs</div>
+      <form id="resursi-form" class="form" novalidate>
+        <div class="form-row">
+          <label for="resource">Resurs</label>
+          <select id="resource" name="resource" required>
+            <!-- Za sada samo jedna opcija, ali dropdown je spreman za još -->
+            <option value="sfx">SFX Sound Pack (ZIP)</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="tvoj@email.com" required />
+        </div>
+
+        <button class="btn" type="submit">Pošalji</button>
+        <div id="status" class="status"></div>
+      </form>
     </div>
   </div>
 </body>
