@@ -9,6 +9,7 @@
 </head>
 <body class="page">
   <div class="bg-glow"><div class="bg-glow-circle"></div></div>
+
   <div class="page-inner">
     <div class="top-bar">
       <a class="back-btn" href="index.html">←</a>
@@ -20,67 +21,139 @@
           <line x1="8" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" />
         </svg>
         <div class="section-title">Portfolio</div>
-        <div class="section-desc">Izdvojeni rad + grid reels (autoplay, mute).</div>
+        <div class="section-desc">Izdvojeni rad + grid reels (autoplay, mute, fullscreen & swipe).</div>
       </div>
     </div>
 
+    <!-- IZDVOJENO (9:16) -->
     <div class="content-block">
       <div class="content-heading">Izdvojeno</div>
-      <div class="feature-wrap">
+      <figure class="feature-wrap"
+              data-title="Tattoo Bar"
+              data-sub="Zvanično otvaranje">
         <video class="feature"
           src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/baritattoo-1080.mp4"
           playsinline muted loop preload="metadata"></video>
-        <button class="reel-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
-      </div>
-      <div class="content-text" style="opacity:.75;margin-top:8px">Tattoo Bar — Zvanično otvaranje</div>
+        <div class="video-controls">
+          <button class="reel-btn mute-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
+          <button class="reel-btn fullscreen-btn" aria-label="Fullscreen"><span class="icon-full"></span></button>
+        </div>
+      </figure>
+      <figcaption class="content-text" style="opacity:.75;margin-top:8px">
+        Tattoo Bar — Zvanično otvaranje
+      </figcaption>
     </div>
 
+    <!-- RADOVI (9:16 grid) -->
     <div class="content-block">
       <div class="content-heading">Radovi</div>
       <div class="video-grid">
-        <figure class="reel-card">
+
+        <figure class="reel-card"
+                data-title="Sancrea Interiors"
+                data-sub="Prostor">
           <div class="reel-wrap">
-            <video class="reel" src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/sancrea-1080.mp4" playsinline muted loop preload="metadata"></video>
-            <button class="reel-btn"><span class="icon-sound"></span></button>
+            <video class="reel"
+              src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/sancrea-1080.mp4"
+              playsinline muted loop preload="metadata"></video>
+            <div class="video-controls">
+              <button class="reel-btn mute-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
+              <button class="reel-btn fullscreen-btn" aria-label="Fullscreen"><span class="icon-full"></span></button>
+            </div>
           </div>
-          <figcaption class="reel-meta"><div class="reel-title">Sancrea Interiors</div><div class="reel-sub">Prostor</div></figcaption>
+          <figcaption class="reel-meta">
+            <div class="reel-title">Sancrea Interiors</div>
+            <div class="reel-sub">Prostor</div>
+          </figcaption>
         </figure>
 
-        <figure class="reel-card">
+        <figure class="reel-card"
+                data-title="Serbia Business Run"
+                data-sub="Event">
           <div class="reel-wrap">
-            <video class="reel" src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/sbr-1080.mp4" playsinline muted loop preload="metadata"></video>
-            <button class="reel-btn"><span class="icon-sound"></span></button>
+            <video class="reel"
+              src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/sbr-1080.mp4"
+              playsinline muted loop preload="metadata"></video>
+            <div class="video-controls">
+              <button class="reel-btn mute-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
+              <button class="reel-btn fullscreen-btn" aria-label="Fullscreen"><span class="icon-full"></span></button>
+            </div>
           </div>
-          <figcaption class="reel-meta"><div class="reel-title">Serbia Business Run</div><div class="reel-sub">Event</div></figcaption>
+          <figcaption class="reel-meta">
+            <div class="reel-title">Serbia Business Run</div>
+            <div class="reel-sub">Event</div>
+          </figcaption>
         </figure>
 
-        <figure class="reel-card">
+        <figure class="reel-card"
+                data-title="Soha Bar"
+                data-sub="Proizvod">
           <div class="reel-wrap">
-            <video class="reel" src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/soha-1080.mp4" playsinline muted loop preload="metadata"></video>
-            <button class="reel-btn"><span class="icon-sound"></span></button>
+            <video class="reel"
+              src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/soha-1080.mp4"
+              playsinline muted loop preload="metadata"></video>
+            <div class="video-controls">
+              <button class="reel-btn mute-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
+              <button class="reel-btn fullscreen-btn" aria-label="Fullscreen"><span class="icon-full"></span></button>
+            </div>
           </div>
-          <figcaption class="reel-meta"><div class="reel-title">Soha Bar</div><div class="reel-sub">Proizvod</div></figcaption>
+          <figcaption class="reel-meta">
+            <div class="reel-title">Soha Bar</div>
+            <div class="reel-sub">Proizvod</div>
+          </figcaption>
         </figure>
 
-        <figure class="reel-card">
+        <figure class="reel-card"
+                data-title="Start trke"
+                data-sub="Event">
           <div class="reel-wrap">
-            <video class="reel" src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/starttrke-1080.mp4" playsinline muted loop preload="metadata"></video>
-            <button class="reel-btn"><span class="icon-sound"></span></button>
+            <video class="reel"
+              src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/starttrke-1080.mp4"
+              playsinline muted loop preload="metadata"></video>
+            <div class="video-controls">
+              <button class="reel-btn mute-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
+              <button class="reel-btn fullscreen-btn" aria-label="Fullscreen"><span class="icon-full"></span></button>
+            </div>
           </div>
-          <figcaption class="reel-meta"><div class="reel-title">Start trke</div><div class="reel-sub">Event</div></figcaption>
+          <figcaption class="reel-meta">
+            <div class="reel-title">Start trke</div>
+            <div class="reel-sub">Event</div>
+          </figcaption>
         </figure>
 
-        <figure class="reel-card">
+        <figure class="reel-card"
+                data-title="Vinarija Bijelica"
+                data-sub="Promo">
           <div class="reel-wrap">
-            <video class="reel" src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/bijelica-1080.mp4" playsinline muted loop preload="metadata"></video>
-            <button class="reel-btn"><span class="icon-sound"></span></button>
+            <video class="reel"
+              src="https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/bijelica-1080.mp4"
+              playsinline muted loop preload="metadata"></video>
+            <div class="video-controls">
+              <button class="reel-btn mute-btn" aria-label="Toggle sound"><span class="icon-sound"></span></button>
+              <button class="reel-btn fullscreen-btn" aria-label="Fullscreen"><span class="icon-full"></span></button>
+            </div>
           </div>
-          <figcaption class="reel-meta"><div class="reel-title">Vinarija Bijelica</div><div class="reel-sub">Promo</div></figcaption>
+          <figcaption class="reel-meta">
+            <div class="reel-title">Vinarija Bijelica</div>
+            <div class="reel-sub">Promo</div>
+          </figcaption>
         </figure>
 
         <figure class="reel-card placeholder">
           <div class="reel-wrap"><div class="placeholder-inner">Uskoro novi reel…</div></div>
         </figure>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen overlay (TikTok stil) -->
+  <div id="fs" class="fs-overlay" aria-hidden="true">
+    <div class="fs-video-wrap">
+      <video id="fsVideo" playsinline preload="auto"></video>
+      <button class="fs-close" aria-label="Zatvori">✕</button>
+      <div class="fs-caption">
+        <div id="fsTitle"></div>
+        <div id="fsSub"></div>
       </div>
     </div>
   </div>
