@@ -15,7 +15,6 @@
     v.muted = true;
     v.playsInline = true;
     v.loop = true;
-
     v.addEventListener("loadeddata", () => v.play().catch(()=>{}));
 
     v.addEventListener("click", () => {
