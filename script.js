@@ -1,84 +1,69 @@
-// ===== Autoplay + mute u gridu (robustan init) =====
+/* ========== 1) Home ikonice: bounce on load ========== */
+(function initHomeAnim(){
+  const icons = document.querySelectorAll('[data-bounce]');
+  if(!icons.length) return;
+  icons.forEach((el, i) => {
+    el.classList.add('bounce-seq');
+    el.classList.add(`bounce-delay-${Math.min(i+1,4)}`);
+  });
+})();
+
+/* ========== 2) Marquee fix (dupliranje ako nedostaje) ========== */
+(function ensureMarquee(){
+  const m = document.getElementById('logoMarquee');
+  if(!m) return;
+  // ako slučajno nema duplikata (ručna izmena), dupliciraj
+  if(m.children.length < 10){
+    const clones = Array.from(m.children).map(n => n.cloneNode(true));
+    clones.forEach(c => m.appendChild(c));
+  }
+})();
+
+/* ========== 3) Portfolio logika ostaje (autoplay/mute/fullscreen) ========== */
+// Autoplay + mute u gridu/feature
 (function () {
   const videos = document.querySelectorAll("video.reel, video.feature");
   if (!videos.length) return;
 
-  // Postavi atribute PRE učitavanja (mobilni autoplay zaht.)
-  videos.forEach((v) => {
-    try {
-      v.setAttribute("muted", "");
-      v.setAttribute("playsinline", "");
-      v.muted = true;
-      v.playsInline = true;
-      v.loop = true;
-      v.dataset.sound = "off"; // UI: krećemo kao muted
-    } catch {}
-  });
-
-  // IntersectionObserver – play/pause po vidljivosti
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       const v = e.target;
-      if (e.isIntersecting) {
-        v.play().catch(() => {
-          setTimeout(() => v.play().catch(()=>{}), 50);
-        });
-      } else {
-        v.pause();
-      }
+      if (e.isIntersecting) v.play().catch(() => {});
+      else v.pause();
     });
-  }, { threshold: 0.35 });
+  }, { threshold: 0.4 });
 
   videos.forEach((v) => {
-    const tryPlay = () => v.play().catch(()=>{});
-    v.addEventListener("loadedmetadata", tryPlay, { once: true });
-    v.addEventListener("canplay", tryPlay, { once: true });
-    setTimeout(tryPlay, 0);
-
-    // Tap na video (grid/feature) — mute toggle
+    v.muted = true; v.playsInline = true; v.loop = true;
+    v.addEventListener("loadeddata", () => v.play().catch(()=>{}));
+    // tap na video u gridu: mute toggle
     v.addEventListener("click", () => {
-      v.muted = !v.muted;
-      v.dataset.sound = v.muted ? "off" : "on"; // CSS menja ikonu
-      v.play().catch(()=>{});
+      v.muted = !v.muted; v.dataset.sound = v.muted ? "off" : "on"; v.play().catch(()=>{});
     });
-
     io.observe(v);
   });
 
-  // Mute dugmad u gridu
+  // mute dugmad
   document.querySelectorAll(".mute-btn").forEach((btn) => {
     btn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       const wrap = btn.closest(".reel-wrap, .feature-wrap");
-      const v = wrap?.querySelector("video");
-      if (!v) return;
-      v.muted = !v.muted;
-      v.dataset.sound = v.muted ? "off" : "on";
-      v.play().catch(()=>{});
-    });
-  });
-
-  // Kada tab ode u background → pauziraj; vrati kad se vrati
-  document.addEventListener("visibilitychange", () => {
-    videos.forEach(v => {
-      if (document.hidden) v.pause();
-      else if (v.muted) v.play().catch(()=>{});
+      const v = wrap.querySelector("video");
+      v.muted = !v.muted; v.dataset.sound = v.muted ? "off" : "on"; v.play().catch(()=>{});
     });
   });
 })();
 
-
-// ===== Fullscreen overlay (TikTok stil + global mute na ulasku) =====
+// Fullscreen overlay + swipe (TikTok)
 (function () {
   const overlay = document.getElementById("fs");
   if (!overlay) return;
-
   const fsVideo = document.getElementById("fsVideo");
   const fsTitle = document.getElementById("fsTitle");
   const fsSub   = document.getElementById("fsSub");
   const closeBtn = overlay.querySelector(".fs-close");
 
-  // Čitamo projekte iz DOM-a (redosled: feature pa grid)
+  // lista projekata po DOM-u
   const nodes = [
     ...document.querySelectorAll(".feature-wrap"),
     ...document.querySelectorAll(".reel-card")
@@ -88,69 +73,58 @@
     const video = node.querySelector("video");
     const t = node.dataset.title || node.querySelector(".reel-title")?.textContent || "";
     const s = node.dataset.sub   || node.querySelector(".reel-sub")?.textContent   || "";
-    return { src: video?.src, title: t, sub: s };
+    return { el: node, src: video?.src, title: t, sub: s };
   }).filter(x => !!x.src);
-
-  // Helpers: global control
-  function pauseAllVideos() {
-    document.querySelectorAll("video").forEach(v => {
-      try { v.muted = true; v.dataset.sound = "off"; v.pause(); } catch {}
-    });
-  }
-  function resumeGridAutoplay() {
-    document.querySelectorAll(".reel, .feature").forEach(v => {
-      try {
-        v.setAttribute("muted", "");
-        v.setAttribute("playsinline", "");
-        v.muted = true;
-        v.dataset.sound = "off"; // UI mute ikone vraćene u mute
-        v.playsInline = true;
-        v.play().catch(()=>{ setTimeout(()=>v.play().catch(()=>{}), 50); });
-      } catch {}
-    });
-  }
 
   let idx = 0;
 
+  // mutiraj + pauziraj sve male videe
+  function pauseGridVideos() {
+    document.querySelectorAll(".reel, .feature").forEach(v=>{
+      v.muted = true; v.pause(); v.dataset.sound = "off";
+      // resetuj stanje ikona u karticama
+      const btn = v.parentElement?.querySelector(".mute-btn");
+      if(btn) btn.classList.remove("is-unmuted");
+    });
+  }
+  // vrati autoplay posle izlaska
+  function resumeGridVideos() {
+    document.querySelectorAll(".reel, .feature").forEach(v=>{
+      v.muted = true; v.play().catch(()=>{});
+      v.dataset.sound = "off";
+      const btn = v.parentElement?.querySelector(".mute-btn");
+      if(btn) btn.classList.remove("is-unmuted");
+    });
+  }
+
   function openAt(i) {
     idx = Math.max(0, Math.min(items.length - 1, i));
-
-    // 1) Zaustavi SVE i resetuj UI mute stanje u gridu
-    pauseAllVideos(); // -> svi muted + data-sound="off"
-
-    // 2) Podesi fullscreen video
     const { src, title, sub } = items[idx];
-    fsVideo.removeAttribute("muted");
-    fsVideo.muted = false;         // fullscreen sa zvukom
-    fsVideo.setAttribute("playsinline", "");
-    fsVideo.playsInline = true;
-    fsVideo.loop = true;
-    fsVideo.src = src;
-    fsVideo.currentTime = 0;
 
+    pauseGridVideos();
+
+    fsVideo.src = src;
     fsTitle.textContent = title || "";
     fsSub.textContent = sub || "";
+    fsVideo.muted = false;
+    fsVideo.playsInline = true;
+    fsVideo.loop = true;
+    fsVideo.currentTime = 0;
 
     overlay.classList.add("active");
     document.body.classList.add("no-scroll");
-
-    // Mikro delay – obezbedi da pauze budu primenjene pre play-a
-    setTimeout(() => fsVideo.play().catch(()=>{}), 0);
+    fsVideo.play().catch(()=>{});
   }
 
   function closeFS() {
-    try { fsVideo.pause(); } catch {}
-    fsVideo.removeAttribute("src");
-    fsVideo.load(); // očisti buffer (Safari bugovi)
-
+    fsVideo.pause();
+    fsVideo.src = "";
     overlay.classList.remove("active");
     document.body.classList.remove("no-scroll");
-
-    // Vrati grid autoplay (mute) + UI mutiran
-    resumeGridAutoplay();
+    resumeGridVideos();
   }
 
-  // Klik na fullscreen dugme
+  // fullscreen dugme / dblclick
   document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -159,8 +133,6 @@
       openAt(i >= 0 ? i : 0);
     });
   });
-
-  // Dvoklik na video/tile otvara fullscreen
   document.querySelectorAll(".feature-wrap, .reel-card .reel-wrap").forEach((wrap) => {
     wrap.addEventListener("dblclick", () => {
       const block = wrap.closest(".feature-wrap, .reel-card");
@@ -169,59 +141,23 @@
     });
   });
 
-  // Close
-  closeBtn.addEventListener("click", closeFS);
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closeFS(); // klik van videa -> zatvori
-  });
+  closeBtn?.addEventListener("click", closeFS);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) closeFS(); });
 
-  // Swipe up/down (TikTok navigacija)
-  let startY = 0;
-  overlay.addEventListener("touchstart", (e) => { startY = e.changedTouches[0].clientY; }, { passive:true });
-  overlay.addEventListener("touchend", (e) => {
-    const delta = e.changedTouches[0].clientY - startY;
-    if (Math.abs(delta) < 40) return;
-    if (delta < 0 && idx < items.length - 1) openAt(idx + 1);
-    else if (delta > 0 && idx > 0) openAt(idx - 1);
-  }, { passive:true });
+  // swipe
+  let startY=0,endY=0,threshold=40;
+  overlay.addEventListener("touchstart",(e)=>{startY=e.changedTouches[0].clientY;},{passive:true});
+  overlay.addEventListener("touchend",(e)=>{
+    endY=e.changedTouches[0].clientY;
+    const d=endY-startY; if(Math.abs(d)<threshold) return;
+    if(d<0 && idx<items.length-1) openAt(idx+1); else if(d>0 && idx>0) openAt(idx-1);
+  },{passive:true});
 
-  // ESC / arrows (desktop)
-  window.addEventListener("keydown", (e) => {
-    if (!overlay.classList.contains("active")) return;
-    if (e.key === "Escape") closeFS();
-    if (e.key === "ArrowUp")   openAt(Math.max(0, idx - 1));
-    if (e.key === "ArrowDown") openAt(Math.min(items.length - 1, idx + 1));
-  });
-})();
-
-
-// ===== Email form (ostaje isto) =====
-(function () {
-  const form = document.getElementById("resursi-form");
-  if (!form) return;
-  const status = document.getElementById("status");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = form.email.value.trim();
-    const resource = form.resource.value;
-    if (!email) { status.textContent = "Unesi validan email."; return; }
-    status.textContent = "Šaljem…";
-    form.querySelector("button[type=submit]").disabled = true;
-
-    try {
-      const res = await fetch("/api/sendResource", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, resource_slug: resource })
-      });
-      if (!res.ok) throw new Error(await res.text());
-      status.textContent = "Poslato! Proveri mail.";
-      form.reset();
-    } catch {
-      status.textContent = "Greška. Pokušaj ponovo.";
-    } finally {
-      form.querySelector("button[type=submit]").disabled = false;
-    }
+  // esc / strelice
+  window.addEventListener("keydown",(e)=>{
+    if(!overlay.classList.contains("active")) return;
+    if(e.key==="Escape") closeFS();
+    if(e.key==="ArrowUp")   openAt(Math.max(0, idx-1));
+    if(e.key==="ArrowDown") openAt(Math.min(items.length-1, idx+1));
   });
 })();
