@@ -193,82 +193,86 @@ button.btn:active{transform:scale(.98)}
   background:rgba(255,255,255,.04); color:#fff; text-decoration:none }
 .back-btn span{ font-size:22px; line-height:1 }
 
-/* ========================= */
-/* O MENI — NEW CODE         */
-/* ========================= */
+/* ======================== */
+/* O MENI — MATCH YOUR HTML */
+/* ======================== */
 
-/* Layout container */
-.about-container {
+/* Main container */
+.about-centered {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 20px 24px 60px;
-  display: grid;
-  gap: 28px;
+  padding: 20px 24px 50px;
 }
 
-.about-image-wrap {
-  width: 100%;
+/* Row: responsive */
+.about-center-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .about-center-row {
+    grid-template-columns: 38% 1fr;
+    gap: 40px;
+  }
+}
+
+/* Image wrapper */
+.about-media {
   display: flex;
   justify-content: center;
 }
 
-.about-image {
+.about-photo {
   width: 100%;
   max-width: 420px;
   border-radius: 16px;
-  display: block;
   object-fit: cover;
-  box-shadow: 0 12px 60px rgba(147,51,234,.18);
+  display: block;
+  box-shadow: 0 15px 60px rgba(147,51,234,.25);
 }
 
-.about-text {
-  color: #fff;
-  line-height: 1.65;
+/* Text */
+.about-copy {
   font-size: 15.8px;
+  line-height: 1.65;
+  color: #fff;
   opacity: .95;
 }
 
-.about-text h1 {
+.about-copy h3 {
   font-size: 22px;
   font-weight: 800;
   margin-bottom: 12px;
 }
 
-/* Desktop layout */
+/* Desktop text size */
 @media (min-width: 960px) {
-  .about-container {
-    grid-template-columns: 36% 1fr;
-    gap: 42px;
-    padding-top: 40px;
-  }
-
-  .about-image {
-    max-width: 420px;
-  }
-
-  .about-text {
+  .about-copy {
     font-size: 17px;
   }
 }
 
-/* ========================= */
-/* MARQUEE LOGO STRIP        */
-/* ========================= */
+/* ======================== */
+/* CLIENT LOGO MARQUEE     */
+/* ======================== */
 
-.clients-marquee {
+.clients {
   width: 100%;
   overflow: hidden;
-  padding: 28px 0 6px;
   margin-top: 10px;
+  padding-bottom: 10px;
 }
 
 .clients-track {
   display: flex;
-  gap: 64px;
   align-items: center;
-  animation: marqueeSlide 22s linear infinite;
-  opacity: .95;
+  gap: 64px;
+  animation: clientsLoop 22s linear infinite;
   will-change: transform;
+  opacity: .95;
 }
 
 .clients-track img {
@@ -277,8 +281,8 @@ button.btn:active{transform:scale(.98)}
   filter: invert(1) brightness(1.2);
 }
 
-/* Kimura crno-belo */
-.clients-track img.kimura {
+/* Kimura special filter */
+.clients-track img[alt*="Kimura"] {
   filter: grayscale(1) brightness(1.1);
 }
 
@@ -286,34 +290,33 @@ button.btn:active{transform:scale(.98)}
   .clients-track img {
     height: 42px;
   }
-
-  .clients-track {
-    gap: 80px;
-  }
 }
 
-@keyframes marqueeSlide {
+/* seamless scroll */
+@keyframes clientsLoop {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-/* ========================= */
-/* ICON ENTRANCE ANIMATION   */
-/* ========================= */
+/* ======================== */
+/* INDEX ICON ENTRY ANIM   */
+/* ======================== */
 
 .menu-card {
   opacity: 0;
-  transform: translateY(24px) scale(.93);
-  animation: cardIn .7s cubic-bezier(.3,.8,.3,1.1) forwards;
+  transform: translateY(26px) scale(.92);
+  animation: cardEnter .7s cubic-bezier(.3,.8,.3,1.1) forwards;
 }
 
 .menu-card:nth-child(1) { animation-delay: .05s; }
-.menu-card:nth-child(2) { animation-delay: .15s; }
-.menu-card:nth-child(3) { animation-delay: .25s; }
-.menu-card:nth-child(4) { animation-delay: .35s; }
+.menu-card:nth-child(2) { animation-delay: .14s; }
+.menu-card:nth-child(3) { animation-delay: .23s; }
+.menu-card:nth-child(4) { animation-delay: .32s; }
 
-@keyframes cardIn {
-  0% { opacity: 0; transform: translateY(24px) scale(.93); }
-  60% { opacity: 1; transform: translateY(-4px) scale(1.04); }
+@keyframes cardEnter {
+  0% { opacity: 0; transform: translateY(26px) scale(.92); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.05); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 }
