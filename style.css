@@ -192,3 +192,80 @@ button.btn:active{transform:scale(.98)}
   border-radius:12px; border:1px solid rgba(147,51,234,.35);
   background:rgba(255,255,255,.04); color:#fff; text-decoration:none }
 .back-btn span{ font-size:22px; line-height:1 }
+
+/* ========== ABOUT ========== */
+
+.page-dark { background:#000; color:#fff; }
+
+/* Header */
+.page-header {
+  display:flex; align-items:center; gap:12px;
+  padding:20px 20px 8px;
+  max-width:1040px; margin:0 auto;
+}
+.page-header h2 { font-size:clamp(20px, 3.5vw, 28px); font-weight:800; }
+.page-header .subtitle { color:rgba(255,255,255,.6); font-size:.9rem; margin-top:2px; }
+.back-btn { display:inline-grid; place-items:center; width:42px; height:42px;
+  border:1px solid rgba(147,51,234,.35); border-radius:12px; background:rgba(255,255,255,.05);
+  color:#fff; text-decoration:none; }
+.back-btn span{font-size:22px; line-height:1}
+
+/* Layout */
+.about-wrap {
+  display:grid; gap:24px; padding:16px 20px 8px; max-width:1040px; margin:0 auto;
+  grid-template-columns:1fr;
+}
+.about-media { order:0; display:flex; justify-content:center; }
+.about-photo {
+  width:100%; max-width:520px; border-radius:16px; display:block;
+  box-shadow:0 0 0 1px rgba(255,255,255,.07), 0 30px 80px rgba(147,51,234,.25);
+}
+.about-copy { order:1; font-size:clamp(15px, 2vw, 17px); line-height:1.7; }
+.about-copy h3 { font-size:clamp(18px, 2.3vw, 22px); margin-bottom:10px; font-weight:800; letter-spacing:.02em; }
+.inline-link { color:#c9a7ff; text-decoration:none; border-bottom:1px dashed rgba(201,167,255,.6); }
+.inline-link:hover { color:#fff; border-color:#fff; }
+
+/* Desktop: slika levo 35%, tekst desno 55% */
+@media (min-width: 980px){
+  .about-wrap{
+    grid-template-columns: 38% 1fr; align-items:start; gap:36px; padding-top:24px;
+  }
+  .about-media{ order:0; }
+  .about-copy{ order:1; }
+  .about-photo{ max-width:none; }
+}
+
+/* ========== Clients marquee ========== */
+.clients {
+  overflow:hidden; width:100%; display:flex; justify-content:center;
+  padding:18px 0 26px;
+}
+.clients-track {
+  display:flex; align-items:center; gap:64px;
+  animation:clientsLoop 22s linear infinite;
+  will-change:transform;
+  padding-inline:64px;
+}
+.clients-track img{
+  height:28px; opacity:.95; filter:brightness(0) invert(1); /* sve belo */
+}
+.clients-track img[alt*="Kimura"]{ filter:grayscale(1) brightness(1) contrast(1.1); } /* black&white */
+
+@media (min-width:768px){
+  .clients-track img{ height:40px; }
+}
+
+@keyframes clientsLoop{
+  from{ transform:translateX(0); }
+  to  { transform:translateX(-50%); } /* dupliran set => savršen loop */
+}
+
+/* BG glow (fiksiran uvek u centru) */
+body.page-dark::after{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background: radial-gradient( circle at 50% 45%, rgba(147,51,234,.16), rgba(0,0,0,0) 55%);
+}
+
+/* ========== (opciono) suptilna animacija kartica na indexu ========== */
+.menu-card { transform:translateY(8px); opacity:0; transition:.35s ease; }
+.menu-card.reveal { transform:translateY(0); opacity:1; }
