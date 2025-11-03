@@ -225,3 +225,22 @@
     }
   });
 })();
+
+// Home icon entrance (ako postoji grid menija na indexu)
+(() => {
+  const cards = document.querySelectorAll(".menu-card");
+  cards.forEach((c,i)=> setTimeout(()=>c.classList.add("reveal"), i*120));
+})();
+
+// (Opc.) Za svaki slučaj, restartuj marquee kad se vrati tab (glitch fix u Mobile Chrome)
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  const track = document.querySelector(".marquee-track");
+  if (track){
+    track.style.animation = "none";
+    // force reflow
+    void track.offsetWidth;
+    track.style.animation = "";
+    track.style.animation = "marqueeX 22s linear infinite";
+  }
+});
