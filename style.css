@@ -307,3 +307,16 @@ body.page-dark{
   .clients-track{ gap:80px }
 }
 @keyframes marqueeX{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+
+/* Specifično povećanje veličine logotipa po brendu */
+.clients-track img[alt*="Serbia Business Run"]{
+  transform: scale(1.3);
+}
+
+.clients-track img[alt*="Aquarius"]{
+  transform: scale(2);
+}
+
+.clients-track img[alt*="Tattoo Bar"]{
+  transform: scale(2);
+}
