@@ -5,7 +5,12 @@ body.no-scroll{overflow:hidden}
 
 /* BG glow — jači + fallback za mobile */
 .bg-glow{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
-.bg-glow-circle{width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;background:rgba(147,51,234,.35);filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite}
+.bg-glow-circle{width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;background:rgba(147,51,234,.35);filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite}{z-index: 0 !important;}
+.about-layout,
+.about-layout * {
+  position: relative;
+  z-index: 4;
+}
 body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(147,51,234,.18),rgba(0,0,0,0) 55%)}
 @keyframes pulseGlow{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 
@@ -212,11 +217,28 @@ button.btn:active{transform:scale(.98)}
 .back-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid rgba(147,51,234,.35);background:rgba(255,255,255,.04);color:#fff;text-decoration:none}
 
 /* ——— LOGO MARQUEE: čisto BELI pikseli; Kimura crno-belo ——— */
-.clients{width:100%;overflow:hidden;margin-top:22px}
-.clients-track{
-  display:flex;align-items:center;gap:64px;
-  animation:clientsLoop 22s linear infinite;will-change:transform;
+.clients {
+  width: 100%;
+  overflow: hidden;
+  padding: 24px 0;
 }
+
+.clients {
+  width: 100vw;
+}
+
+.clients-track {
+  display: flex;
+  gap: 80px;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 .clients-track img{
   height:28px;object-fit:contain;
   /* svi pikseli ispadaju kao belo: */
