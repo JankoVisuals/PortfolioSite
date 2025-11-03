@@ -7,10 +7,13 @@
   <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
-<body class="page-dark">
+<body class="page">
 
-  <!-- HEADER GORE -->
-  <header class="page-header">
+  <!-- Glow (ostaje globalno) -->
+  <div class="bg-glow"><div class="bg-glow-circle"></div></div>
+
+  <!-- Header identičan ostalim stranicama -->
+  <header class="page-header about-zfix">
     <a class="back-btn" href="/"><span>←</span></a>
     <div>
       <h2>O meni</h2>
@@ -18,59 +21,64 @@
     </div>
   </header>
 
-  <!-- FOTO + TEKST -->
-  <main class="about-centered">
-    <div class="about-center-row">
-      <div class="about-media">
-        <img src="/assets/headshots/o-meni.jpg" alt="Janko Filipović portret" class="about-photo" />
-      </div>
-
-      <article class="about-copy">
-      <h3>JANKO FILIPOVIĆ</h3>
-<p>
-  Moja ljubav prema snimanju krenula je kao hobi — nosio sam kameru svuda sa sobom. Vremenom je hobi prerastao u ozbiljan poziv, sa novijom opremom, većim klijentima i sve ambicioznijim ciljevima.
-</p>
-<p>
-  Danas sam u industriji profesionalno od 2023. godine i student sam na Fakultetu dramskih umetnosti, na katedri filmske i televizijske produkcije.
-</p>
-<p>
-  Radio sam sa 50+ klijenata i pomažem biznisima da povećaju prodaju i konverzije kroz strateški kreiran video sadržaj. Ovo nisu samo lepi kadrovi — ovo je komunikacija dizajnirana da pokrene publiku.
-</p>
-<p>
-  Sa Stefanom 
-  <a class="inline-link" href="https://instagram.com/itsstefanhere" target="_blank">@itsstefanhere</a>
-  vodim agenciju <strong>IronGorilla</strong> gde zajedno pokrivamo video produkciju, prodaju, razvoj strategije i copy.
-</p>
-<p>
-  Moj dugoročni cilj: jednog dana snimiti svoj film ili seriju.
-</p>
-
-      </article>
+  <!-- Sadržaj: foto + tekst; na desktopu pored, na telefonu ispod -->
+  <main class="about-layout about-zfix">
+    <div class="about-media">
+      <img class="about-photo" src="/assets/headshots/o-meni.jpg" alt="Janko Filipović portret" />
     </div>
+
+    <article class="about-copy">
+      <h3>JANKO FILIPOVIĆ</h3>
+
+      <p>
+        Moja ljubav prema snimanju krenula je kao hobi — nosio sam kameru svuda sa sobom. Vremenom je hobi
+        prerastao u ozbiljan poziv, sa novijom opremom, većim klijentima i sve ambicioznijim ciljevima.
+      </p>
+
+      <p>
+        Danas sam u industriji profesionalno od 2023. godine i student sam na Fakultetu dramskih umetnosti, na
+        katedri filmske i televizijske produkcije.
+      </p>
+
+      <p>
+        Radio sam sa <strong>50+ klijenata</strong> i pomažem biznisima da povećaju prodaju i konverzije kroz
+        strateški kreiran video sadržaj. Ovo nisu samo lepi kadrovi — ovo je komunikacija dizajnirana da pokrene publiku.
+      </p>
+
+      <p>
+        Sa Stefanom
+        <a class="inline-link" href="https://instagram.com/itsstefanhere" target="_blank" rel="noopener">@itsstefanhere</a>
+        vodim agenciju <strong>IronGorilla</strong> — zajedno pokrivamo video produkciju, prodaju, razvoj strategije i copy.
+      </p>
+
+      <p>Moj dugoročni cilj: jednog dana snimiti svoj film ili seriju.</p>
+    </article>
   </main>
 
-  <!-- LOGO MARQUEE ODVOJEN -->
-  <section class="clients clients-bottom">
+  <!-- Logoi u neprekidnom (seamless) loop-u, preko cele širine -->
+  <section class="clients about-zfix">
     <div class="clients-track">
-      <img src="/assets/logos/sancrea.png" alt="SANCREA" />
-      <img src="/assets/logos/serbia-business-run.png" alt="Serbia Business Run" />
-      <img src="/assets/logos/aquarius.png" alt="Aquarius" />
-      <img src="/assets/logos/powerzone.png" alt="Power Zone" />
-      <img src="/assets/logos/konovo.png" alt="Konovo" />
-      <img src="/assets/logos/tattoo-bar.png" alt="Tattoo Bar" />
-      <img src="/assets/logos/the-place.png" alt="The Place" />
-      <img src="/assets/logos/etagi.png" alt="Etagi" />
-      <img src="/assets/logos/kimura.png" alt="Kimura Jiu-Jitsu" />
-      <!-- duplikati -->
-      <img src="/assets/logos/sancrea.png" alt="SANCREA" />
-      <img src="/assets/logos/serbia-business-run.png" alt="Serbia Business Run" />
-      <img src="/assets/logos/aquarius.png" alt="Aquarius" />
-      <img src="/assets/logos/powerzone.png" alt="Power Zone" />
-      <img src="/assets/logos/konovo.png" alt="Konovo" />
-      <img src="/assets/logos/tattoo-bar.png" alt="Tattoo Bar" />
-      <img src="/assets/logos/the-place.png" alt="The Place" />
-      <img src="/assets/logos/etagi.png" alt="Etagi" />
-      <img src="/assets/logos/kimura.png" alt="Kimura Jiu-Jitsu" />
+      <!-- SET A -->
+      <img src="/assets/logos/sancrea.png"               alt="SANCREA" />
+      <img src="/assets/logos/serbia-business-run.png"   alt="Serbia Business Run" />
+      <img src="/assets/logos/aquarius.png"              alt="Aquarius" />
+      <img src="/assets/logos/powerzone.png"             alt="Power Zone" />
+      <img src="/assets/logos/konovo.png"                alt="Konovo" />
+      <img src="/assets/logos/tattoo-bar.png"            alt="Tattoo Bar" />
+      <img src="/assets/logos/the-place.png"             alt="The Place" />
+      <img src="/assets/logos/etagi.png"                 alt="Etagi" />
+      <img src="/assets/logos/kimura.png"                alt="Kimura Jiu-Jitsu" />
+
+      <!-- SET B (duplikat za seamless) -->
+      <img src="/assets/logos/sancrea.png"               alt="SANCREA" />
+      <img src="/assets/logos/serbia-business-run.png"   alt="Serbia Business Run" />
+      <img src="/assets/logos/aquarius.png"              alt="Aquarius" />
+      <img src="/assets/logos/powerzone.png"             alt="Power Zone" />
+      <img src="/assets/logos/konovo.png"                alt="Konovo" />
+      <img src="/assets/logos/tattoo-bar.png"            alt="Tattoo Bar" />
+      <img src="/assets/logos/the-place.png"             alt="The Place" />
+      <img src="/assets/logos/etagi.png"                 alt="Etagi" />
+      <img src="/assets/logos/kimura.png"                alt="Kimura Jiu-Jitsu" />
     </div>
   </section>
 
