@@ -192,3 +192,128 @@ button.btn:active{transform:scale(.98)}
   border-radius:12px; border:1px solid rgba(147,51,234,.35);
   background:rgba(255,255,255,.04); color:#fff; text-decoration:none }
 .back-btn span{ font-size:22px; line-height:1 }
+
+/* ========================= */
+/* O MENI — NEW CODE         */
+/* ========================= */
+
+/* Layout container */
+.about-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
+  display: grid;
+  gap: 28px;
+}
+
+.about-image-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.about-image {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 12px 60px rgba(147,51,234,.18);
+}
+
+.about-text {
+  color: #fff;
+  line-height: 1.65;
+  font-size: 15.8px;
+  opacity: .95;
+}
+
+.about-text h1 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+/* Desktop layout */
+@media (min-width: 960px) {
+  .about-container {
+    grid-template-columns: 36% 1fr;
+    gap: 42px;
+    padding-top: 40px;
+  }
+
+  .about-image {
+    max-width: 420px;
+  }
+
+  .about-text {
+    font-size: 17px;
+  }
+}
+
+/* ========================= */
+/* MARQUEE LOGO STRIP        */
+/* ========================= */
+
+.clients-marquee {
+  width: 100%;
+  overflow: hidden;
+  padding: 28px 0 6px;
+  margin-top: 10px;
+}
+
+.clients-track {
+  display: flex;
+  gap: 64px;
+  align-items: center;
+  animation: marqueeSlide 22s linear infinite;
+  opacity: .95;
+  will-change: transform;
+}
+
+.clients-track img {
+  height: 28px;
+  object-fit: contain;
+  filter: invert(1) brightness(1.2);
+}
+
+/* Kimura crno-belo */
+.clients-track img.kimura {
+  filter: grayscale(1) brightness(1.1);
+}
+
+@media (min-width: 768px) {
+  .clients-track img {
+    height: 42px;
+  }
+
+  .clients-track {
+    gap: 80px;
+  }
+}
+
+@keyframes marqueeSlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ========================= */
+/* ICON ENTRANCE ANIMATION   */
+/* ========================= */
+
+.menu-card {
+  opacity: 0;
+  transform: translateY(24px) scale(.93);
+  animation: cardIn .7s cubic-bezier(.3,.8,.3,1.1) forwards;
+}
+
+.menu-card:nth-child(1) { animation-delay: .05s; }
+.menu-card:nth-child(2) { animation-delay: .15s; }
+.menu-card:nth-child(3) { animation-delay: .25s; }
+.menu-card:nth-child(4) { animation-delay: .35s; }
+
+@keyframes cardIn {
+  0% { opacity: 0; transform: translateY(24px) scale(.93); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.04); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
