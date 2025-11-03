@@ -3,27 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>O meni • Janko Visuals Produkcija</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>O meni — Janko Visuals</title>
+  <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
 </head>
-<body class="page">
-  <div class="bg-glow"><div class="bg-glow-circle"></div></div>
-  <div class="page-inner">
-    <div class="top-bar">
-      <a class="back-btn" href="index.html">←</a>
-      <div class="section-heading">
-        <svg class="section-icon" viewBox="0 0 24 24">
-          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" fill="none" />
-          <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
-        </svg>
-        <div class="section-title">O meni</div>
-        <div class="section-desc">Video produkcija fokusirana na rast brenda i konverziju — ne samo estetiku.</div>
-      </div>
+<body class="page-dark">
+
+  <header class="page-header">
+    <a class="back-btn" href="/"><span>←</span></a>
+    <div>
+      <h2>O meni</h2>
+      <p class="subtitle">Ekskluzivna produkcija za premium klijente</p>
     </div>
-    <div class="content-block">
-      <div class="content-heading">Ko sam ja</div>
-      <div class="content-text">Ja sam Janko, vodim Janko Visuals Produkciju. Snimam, režiram i isporučujem gotov video za biznise koji žele rezultat, ne samo lep kadar.</div>
+  </header>
+
+  <main class="about-wrap">
+    <figure class="about-photo">
+      <img src="/assets/o-meni.jpg" alt="Janko Filipović portret">
+    </figure>
+
+    <section class="about-copy">
+      <h3>JANKO FILIPOVIĆ</h3>
+      <p>
+        Ja sam Janko Filipović, snimanjem se profesionalno bavim od 2023. godine i student sam na Fakultetu dramskih umetnosti na katedri filmske i televizijske produkcije. Pomažem biznisima da povećaju svoju prodaju i konverzije kreiranjem video sadržaja za njihove društvene mreže. Ali to nisu samo lepi snimci — to su precizno odabrani kadrovi koji šalju poruku vašim klijentima.
+      </p>
+      <p>
+        Radio sam sa 40+ firmi; sa mnogima sarađujem i posle godinu dana. Sa Stefanom (@itsstefanhere) radim gotovo dve godine i zajedno vodimo agenciju <b>IronGorilla</b>: pokrivamo video produkciju, prodaju, strategiju i copy.
+      </p>
+    </section>
+  </main>
+
+  <!-- Klijenti (seamless loop, bez bordera) -->
+  <section class="marquee">
+    <div class="marquee-track">
+      <img src="/assets/sancrea.png" alt="SANCREA">
+      <img src="/assets/serbia-business-run.png" alt="Serbia Business Run">
+      <img src="/assets/aquarius.png" alt="Aquarius">
+      <img src="/assets/powerzone.png" alt="Power Zone">
+      <img src="/assets/konovo.png" alt="Konovo">
+      <img src="/assets/tattoo-bar.png" alt="Tattoo Bar">
+      <img src="/assets/the-place.png" alt="The Place">
+      <img src="/assets/etagi.png" alt="Etagi">
+      <img src="/assets/kimura.png" class="logo-bw" alt="Kimura Jiu-Jitsu">
+
+      <!-- duplikat za seamless -->
+      <img src="/assets/sancrea.png" alt="">
+      <img src="/assets/serbia-business-run.png" alt="">
+      <img src="/assets/aquarius.png" alt="">
+      <img src="/assets/powerzone.png" alt="">
+      <img src="/assets/konovo.png" alt="">
+      <img src="/assets/tattoo-bar.png" alt="">
+      <img src="/assets/the-place.png" alt="">
+      <img src="/assets/etagi.png" alt="">
+      <img src="/assets/kimura.png" class="logo-bw" alt="">
     </div>
-  </div>
+  </section>
+
+  <script src="/script.js"></script>
 </body>
 </html>
