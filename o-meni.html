@@ -2,63 +2,74 @@
 <html lang="sr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>O meni — Janko Visuals</title>
   <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body class="page-dark">
 
-  <header class="page-header">
-    <a class="back-btn" href="/"><span>←</span></a>
+<div class="page-container">
+
+  <div class="page-header">
+    <a href="/" class="back-button"><span>←</span></a>
     <div>
-      <h2>O meni</h2>
-      <p class="subtitle">Ekskluzivna produkcija za premium klijente</p>
+      <h1>O meni</h1>
+      <p class="page-subtitle">Ekskluzivna produkcija za premium klijente</p>
     </div>
-  </header>
+  </div>
 
-  <main class="about-wrap">
-    <figure class="about-photo">
-      <img src="/assets/o-meni.jpg" alt="Janko Filipović portret">
-    </figure>
+  <div class="about-wrapper">
 
-    <section class="about-copy">
-      <h3>JANKO FILIPOVIĆ</h3>
-      <p>
-        Ja sam Janko Filipović, snimanjem se profesionalno bavim od 2023. godine i student sam na Fakultetu dramskih umetnosti na katedri filmske i televizijske produkcije. Pomažem biznisima da povećaju svoju prodaju i konverzije kreiranjem video sadržaja za njihove društvene mreže. Ali to nisu samo lepi snimci — to su precizno odabrani kadrovi koji šalju poruku vašim klijentima.
-      </p>
-      <p>
-        Radio sam sa 40+ firmi; sa mnogima sarađujem i posle godinu dana. Sa Stefanom (@itsstefanhere) radim gotovo dve godine i zajedno vodimo agenciju <b>IronGorilla</b>: pokrivamo video produkciju, prodaju, strategiju i copy.
-      </p>
-    </section>
-  </main>
+      <div class="about-image">
+        <img src="/assets/o-meni.jpg" alt="Janko Filipović portret">
+      </div>
 
-  <!-- Klijenti (seamless loop, bez bordera) -->
-  <section class="marquee">
+      <div class="about-content">
+        <h2>JANKO FILIPOVIĆ</h2>
+        <p>
+          Ja sam Janko Filipović, snimanjem se profesionalno bavim od 2023. godine i student sam 
+          na Fakultetu dramskih umetnosti na katedri filmske i televizijske produkcije.
+          Pomažem biznisima da povećaju svoju prodaju i konverzije kreiranjem video sadržaja 
+          za njihove društvene mreže. Ali to nisu samo lepi snimci — to su precizno odabrani 
+          kadrovi koji šalju poruku vašim klijentima.
+        </p>
+        <p>
+          Radio sam sa 40+ firmi; sa mnogima sarađujem i posle godinu dana. 
+          Sa Stefanom (@itsstefanhere) radim gotovo dve godine i zajedno vodimo agenciju 
+          <b>IronGorilla</b>: pokrivamo video produkciju, prodaju, strategiju i copy.
+        </p>
+      </div>
+
+  </div>
+
+  <!-- CLIENT MARQUEE -->
+  <div class="marquee">
     <div class="marquee-track">
-      <img src="/assets/sancrea.png" alt="SANCREA">
-      <img src="/assets/serbia-business-run.png" alt="Serbia Business Run">
-      <img src="/assets/aquarius.png" alt="Aquarius">
-      <img src="/assets/powerzone.png" alt="Power Zone">
-      <img src="/assets/konovo.png" alt="Konovo">
-      <img src="/assets/tattoo-bar.png" alt="Tattoo Bar">
-      <img src="/assets/the-place.png" alt="The Place">
-      <img src="/assets/etagi.png" alt="Etagi">
-      <img src="/assets/kimura.png" class="logo-bw" alt="Kimura Jiu-Jitsu">
-
-      <!-- duplikat za seamless -->
-      <img src="/assets/sancrea.png" alt="">
-      <img src="/assets/serbia-business-run.png" alt="">
-      <img src="/assets/aquarius.png" alt="">
-      <img src="/assets/powerzone.png" alt="">
-      <img src="/assets/konovo.png" alt="">
-      <img src="/assets/tattoo-bar.png" alt="">
-      <img src="/assets/the-place.png" alt="">
-      <img src="/assets/etagi.png" alt="">
-      <img src="/assets/kimura.png" class="logo-bw" alt="">
+      <img src="/assets/sancrea.png">
+      <img src="/assets/serbia-business-run.png">
+      <img src="/assets/aquarius.png">
+      <img src="/assets/powerzone.png">
+      <img src="/assets/konovo.png">
+      <img src="/assets/tattoo-bar.png">
+      <img src="/assets/the-place.png">
+      <img src="/assets/etagi.png">
+      <img src="/assets/kimura.png" class="logo-bw">
+      
+      <!-- clone for seamless -->
+      <img src="/assets/sancrea.png">
+      <img src="/assets/serbia-business-run.png">
+      <img src="/assets/aquarius.png">
+      <img src="/assets/powerzone.png">
+      <img src="/assets/konovo.png">
+      <img src="/assets/tattoo-bar.png">
+      <img src="/assets/the-place.png">
+      <img src="/assets/etagi.png">
+      <img src="/assets/kimura.png" class="logo-bw">
     </div>
-  </section>
+  </div>
 
-  <script src="/script.js"></script>
+</div>
+
 </body>
 </html>
