@@ -193,130 +193,61 @@ button.btn:active{transform:scale(.98)}
   background:rgba(255,255,255,.04); color:#fff; text-decoration:none }
 .back-btn span{ font-size:22px; line-height:1 }
 
-/* ======================== */
-/* O MENI — MATCH YOUR HTML */
-/* ======================== */
+/* ——— O MENI: layout ostaje kao u tvom HTML ——— */
+.about-centered{max-width:1100px;margin:0 auto;padding:20px 24px 56px}
+.about-center-row{display:grid;gap:28px;grid-template-columns:1fr;align-items:center;justify-items:center}
+@media (min-width:960px){
+  .about-center-row{grid-template-columns:38% 1fr;gap:40px;justify-items:stretch}
+}
+.about-media{display:flex;justify-content:center}
+.about-photo{width:100%;max-width:420px;border-radius:16px;display:block;object-fit:cover;box-shadow:0 15px 60px rgba(147,51,234,.22)}
+.about-copy{font-size:15.8px;line-height:1.65;color:#fff;opacity:.95}
+.about-copy h3{font-size:22px;font-weight:800;margin-bottom:12px}
+@media (min-width:960px){.about-copy{font-size:17px}}
 
-/* Main container */
-.about-centered {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px 24px 50px;
+/* ——— Header spacing da na desktopu stoji gore kao i na drugim stranicama ——— */
+.page-header{display:flex;align-items:center;gap:12px;padding:14px 24px 6px}
+.page-header h2{font-size:22px;font-weight:800}
+.page-header .subtitle{color:rgba(255,255,255,.65);font-size:14px}
+.back-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid rgba(147,51,234,.35);background:rgba(255,255,255,.04);color:#fff;text-decoration:none}
+
+/* ——— LOGO MARQUEE: čisto BELI pikseli; Kimura crno-belo ——— */
+.clients{width:100%;overflow:hidden;margin-top:22px}
+.clients-track{
+  display:flex;align-items:center;gap:64px;
+  animation:clientsLoop 22s linear infinite;will-change:transform;
+}
+.clients-track img{
+  height:28px;object-fit:contain;
+  /* svi pikseli ispadaju kao belo: */
+  filter: brightness(0) invert(1);
+  /* ako želiš dodatni "punch": */
+  /* filter: brightness(0) invert(1) contrast(1.1); */
+}
+/* Kimura izuzetak: samo BW, bez forsiranja u belo */
+.clients-track img[alt*="Kimura"]{
+  filter: grayscale(1) brightness(1);
 }
 
-/* Row: responsive */
-.about-center-row {
-  display: grid;
-  gap: 28px;
-  grid-template-columns: 1fr;
-  align-items: center;
+@media (min-width:768px){
+  .clients-track{gap:80px}
+  .clients-track img{height:42px}
+}
+/* Seamless – pretpostavka: u HTML-u imaš dupli set logotipa (A+B) */
+@keyframes clientsLoop{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)} /* track širine ≈ 200% zbog duplikata */
 }
 
-@media (min-width: 960px) {
-  .about-center-row {
-    grid-template-columns: 38% 1fr;
-    gap: 40px;
-  }
-}
-
-/* Image wrapper */
-.about-media {
-  display: flex;
-  justify-content: center;
-}
-
-.about-photo {
-  width: 100%;
-  max-width: 420px;
-  border-radius: 16px;
-  object-fit: cover;
-  display: block;
-  box-shadow: 0 15px 60px rgba(147,51,234,.25);
-}
-
-/* Text */
-.about-copy {
-  font-size: 15.8px;
-  line-height: 1.65;
-  color: #fff;
-  opacity: .95;
-}
-
-.about-copy h3 {
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-
-/* Desktop text size */
-@media (min-width: 960px) {
-  .about-copy {
-    font-size: 17px;
-  }
-}
-
-/* ======================== */
-/* CLIENT LOGO MARQUEE     */
-/* ======================== */
-
-.clients {
-  width: 100%;
-  overflow: hidden;
-  margin-top: 10px;
-  padding-bottom: 10px;
-}
-
-.clients-track {
-  display: flex;
-  align-items: center;
-  gap: 64px;
-  animation: clientsLoop 22s linear infinite;
-  will-change: transform;
-  opacity: .95;
-}
-
-.clients-track img {
-  height: 28px;
-  object-fit: contain;
-  filter: invert(1) brightness(1.2);
-}
-
-/* Kimura special filter */
-.clients-track img[alt*="Kimura"] {
-  filter: grayscale(1) brightness(1.1);
-}
-
-@media (min-width: 768px) {
-  .clients-track img {
-    height: 42px;
-  }
-}
-
-/* seamless scroll */
-@keyframes clientsLoop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ======================== */
-/* INDEX ICON ENTRY ANIM   */
-/* ======================== */
-
-.menu-card {
-  opacity: 0;
-  transform: translateY(26px) scale(.92);
-  animation: cardEnter .7s cubic-bezier(.3,.8,.3,1.1) forwards;
-}
-
-.menu-card:nth-child(1) { animation-delay: .05s; }
-.menu-card:nth-child(2) { animation-delay: .14s; }
-.menu-card:nth-child(3) { animation-delay: .23s; }
-.menu-card:nth-child(4) { animation-delay: .32s; }
-
-@keyframes cardEnter {
-  0% { opacity: 0; transform: translateY(26px) scale(.92); }
-  60% { opacity: 1; transform: translateY(-4px) scale(1.05); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
+/* ——— HOME animacije ikonica (blag entry, bez lomljenja) ——— */
+.menu-card{opacity:0;transform:translateY(26px) scale(.92);
+  animation:cardEnter .7s cubic-bezier(.3,.8,.3,1.1) forwards}
+.menu-card:nth-child(1){animation-delay:.05s}
+.menu-card:nth-child(2){animation-delay:.14s}
+.menu-card:nth-child(3){animation-delay:.23s}
+.menu-card:nth-child(4){animation-delay:.32s}
+@keyframes cardEnter{
+  0%{opacity:0;transform:translateY(26px) scale(.92)}
+  60%{opacity:1;transform:translateY(-4px) scale(1.05)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
 }
