@@ -5,12 +5,7 @@ body.no-scroll{overflow:hidden}
 
 /* BG glow — jači + fallback za mobile */
 .bg-glow{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
-.bg-glow-circle{width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;background:rgba(147,51,234,.35);filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite}{z-index: 0 !important;}
-.about-layout,
-.about-layout * {
-  position: relative;
-  z-index: 4;
-}
+.bg-glow-circle{width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;background:rgba(147,51,234,.35);filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite;z-index:0!important}
 body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(147,51,234,.18),rgba(0,0,0,0) 55%)}
 @keyframes pulseGlow{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 
@@ -85,274 +80,61 @@ video[data-sound="on"] ~ .video-controls .icon-sound::before{content:"🔊"}
 .fs-close{position:absolute;top:14px;right:14px;z-index:120;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.4);color:#fff;border-radius:999px;font-size:1rem;line-height:1;padding:10px 12px}
 
 /* ==== Besplatni resursi: forma (glass card) ==== */
-.form-card{
-  border-radius:16px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  padding:16px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25) inset, 0 10px 25px rgba(0,0,0,.15);
-}
-
+.form-card{border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25) inset, 0 10px 25px rgba(0,0,0,.15)}
 .form{display:flex;flex-direction:column;gap:14px}
 .form-row{display:flex;flex-direction:column;gap:8px}
-
-label{
-  font-size:.8rem;
-  color:rgba(255,255,255,.75);
-  letter-spacing:.03em;
-}
-
-select,
-input[type="email"]{
-  width:100%;
-  height:44px;
-  padding:0 12px;
-  border-radius:12px;
-  border:1px solid rgba(147,51,234,.45);
-  background:rgba(0,0,0,.35);
-  color:#fff;
-  outline:none;
-}
-
-select{
-  -webkit-appearance:none;appearance:none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%),
-    linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) 18px,
-    calc(100% - 12px) 18px;
-  background-size:6px 6px, 6px 6px;
-  background-repeat:no-repeat;
-}
-
+label{font-size:.8rem;color:rgba(255,255,255,.75);letter-spacing:.03em}
+select,input[type="email"]{width:100%;height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(147,51,234,.45);background:rgba(0,0,0,.35);color:#fff;outline:none}
+select{-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%),linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%);background-position:calc(100% - 18px) 18px,calc(100% - 12px) 18px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
 input::placeholder{color:rgba(255,255,255,.45)}
-
-button.btn{
-  width:100%;
-  height:46px;
-  border-radius:12px;
-  border:1px solid rgba(147,51,234,.6);
-  background:linear-gradient(180deg, rgba(147,51,234,.45), rgba(147,51,234,.25));
-  color:#fff;font-weight:700;letter-spacing:.02em
-}
+button.btn{width:100%;height:46px;border-radius:12px;border:1px solid rgba(147,51,234,.6);background:linear-gradient(180deg, rgba(147,51,234,.45), rgba(147,51,234,.25));color:#fff;font-weight:700;letter-spacing:.02em}
 button.btn:active{transform:scale(.98)}
-
-.status{
-  font-size:.82rem;
-  color:rgba(255,255,255,.7);
-  min-height:1.2em;
-  margin-top:2px;
-}
-
-/* “IZABERI RESURS” heading u kartici */
-.content-heading.kicker{
-  color:rgba(255,255,255,.75);
-  font-weight:700;
-  letter-spacing:.1em;
-}
+.status{font-size:.82rem;color:rgba(255,255,255,.7);min-height:1.2em;margin-top:2px}
+.content-heading.kicker{color:rgba(255,255,255,.75);font-weight:700;letter-spacing:.1em}
 
 /* ==== O MENI — layout ==== */
-.about-wrap{
-  max-width: 1100px; margin: 0 auto; padding: 20px 20px 8px;
-  display: grid; gap: 28px;
-  grid-template-columns: 1fr; align-items: start;
-}
-.about-photo img{
-  width: 100%; height: auto; display: block; border-radius: 16px;
-  box-shadow: 0 12px 60px rgba(147,51,234,.18);
-}
-.about-copy{ color:#fff; line-height:1.65; font-size:15.5px }
-.about-copy h3{ font-size:21px; font-weight:800; margin-bottom:10px }
-
-/* Desktop: portret “25% manji” – ne zauzima punu širinu; tekst desno */
-@media (min-width: 960px){
-  .about-wrap{ grid-template-columns: 38% 1fr; gap: 36px; padding-inline: 24px }
-  .about-photo img{ width: 100%; max-width: 420px }
-  .about-copy{ font-size:16.5px }
-}
-
-/* ==== Marquee (bez bordera, centriran, seamless) ==== */
-.marquee{ width:100%; overflow:hidden; padding: 8px 0 26px; }
-.marquee-track{
-  display:flex; align-items:center; gap:64px; will-change: transform;
-  animation: marqueeX 22s linear infinite;
-}
-.marquee-track img{
-  height:32px; object-fit:contain; opacity:.95; filter: invert(1) brightness(1.1);
-}
-.marquee-track img.logo-bw{ filter: grayscale(1) brightness(1) } /* Kimura crno-belo, bez invert-a */
-
-@media (min-width:768px){
-  .marquee-track img{ height:42px }
-  .marquee-track{ gap:80px }
-}
-@keyframes marqueeX{ from{ transform:translateX(0)} to{ transform:translateX(-50%)} }
-
-/* ==== Shared header bits (safe) ==== */
-.page-header{ display:flex; align-items:center; gap:12px; padding: 14px 20px }
-.page-header h2{ font-size:22px; font-weight:800 }
-.page-header .subtitle{ color:rgba(255,255,255,.65); font-size:14px }
-.back-btn{ display:grid; place-items:center; width:42px; height:42px;
-  border-radius:12px; border:1px solid rgba(147,51,234,.35);
-  background:rgba(255,255,255,.04); color:#fff; text-decoration:none }
-.back-btn span{ font-size:22px; line-height:1 }
-
-/* ——— O MENI: layout ostaje kao u tvom HTML ——— */
-.about-centered{max-width:1100px;margin:0 auto;padding:20px 24px 56px}
-.about-center-row{display:grid;gap:28px;grid-template-columns:1fr;align-items:center;justify-items:center}
-@media (min-width:960px){
-  .about-center-row{grid-template-columns:38% 1fr;gap:40px;justify-items:stretch}
-}
-.about-media{display:flex;justify-content:center}
-.about-photo{width:100%;max-width:420px;border-radius:16px;display:block;object-fit:cover;box-shadow:0 15px 60px rgba(147,51,234,.22)}
-.about-copy{font-size:15.8px;line-height:1.65;color:#fff;opacity:.95}
-.about-copy h3{font-size:22px;font-weight:800;margin-bottom:12px}
-@media (min-width:960px){.about-copy{font-size:17px}}
-
-/* ——— Header spacing da na desktopu stoji gore kao i na drugim stranicama ——— */
-.page-header{display:flex;align-items:center;gap:12px;padding:14px 24px 6px}
+.page-header{display:flex;align-items:center;gap:12px;padding:14px 20px}
 .page-header h2{font-size:22px;font-weight:800}
 .page-header .subtitle{color:rgba(255,255,255,.65);font-size:14px}
 .back-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid rgba(147,51,234,.35);background:rgba(255,255,255,.04);color:#fff;text-decoration:none}
+.back-btn span{font-size:22px;line-height:1}
 
-/* ——— LOGO MARQUEE: čisto BELI pikseli; Kimura crno-belo ——— */
-.clients {
-  width: 100%;
-  overflow: hidden;
-  padding: 24px 0;
-}
+.about-layout{max-width:1200px;margin:0 auto;padding:20px 20px 8px;display:grid;gap:28px;grid-template-columns:1fr;align-items:start}
+.about-media{display:flex;justify-content:center}
+.about-photo{width:100%;max-width:520px;height:auto;display:block;border-radius:16px;box-shadow:0 12px 60px rgba(147,51,234,.18)}
+.about-copy{color:#fff;line-height:1.65;font-size:15.5px}
+.about-copy h3{font-size:21px;font-weight:800;margin-bottom:10px}
 
-.clients {
-  width: 100vw;
-}
-
-.clients-track {
-  display: flex;
-  gap: 80px;
-  width: max-content;
-  animation: marquee 28s linear infinite;
+/* Desktop raspored: foto levo 38%, tekst desno */
+@media (min-width: 1024px){
+  .about-layout{grid-template-columns:38% 1fr;gap:40px;padding-inline:24px}
+  .about-photo{max-width:520px}
+  .about-copy{font-size:16.5px}
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+/* Glow ne utiče na O-meni sekciju */
+.about-zfix{position:relative;z-index:4}
+
+/* ==== Klijenti (marquee) ==== */
+.clients{width:100vw;overflow:hidden;padding:28px 0 34px}
+.clients-track{display:flex;align-items:center;gap:80px;width:max-content;animation:marquee 28s linear infinite}
+.clients-track img{height:40px;object-fit:contain;display:block;margin-inline:44px;filter:brightness(0) invert(1)} /* sve u čisto belo */
+
+/* Posebna pravila za skaliranje */
+.clients-track img[alt*="Serbia Business Run"]{transform:scale(1.3)}
+.clients-track img[alt*="Aquarius"]{transform:scale(2)}
+.clients-track img[alt*="Tattoo Bar"]{transform:scale(2)}
+.clients-track img[alt*="Power Zone"]{transform:scale(1.4)}
+
+/* Kimura: crno-belo, bez forsiranja u belo */
+.clients-track img[alt*="Kimura"]{filter:grayscale(1) brightness(1.1) contrast(1.2)}
+
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
 }
 
-.clients-track img{
-  height:28px;object-fit:contain;
-  /* svi pikseli ispadaju kao belo: */
-  filter: brightness(0) invert(1);
-  /* ako želiš dodatni "punch": */
-  /* filter: brightness(0) invert(1) contrast(1.1); */
-}
-/* Kimura izuzetak: samo BW, bez forsiranja u belo */
-.clients-track img[alt*="Kimura"]{
-  filter: grayscale(1) brightness(1);
-}
-
-@media (min-width:768px){
-  .clients-track{gap:80px}
-  .clients-track img{height:42px}
-}
-/* Seamless – pretpostavka: u HTML-u imaš dupli set logotipa (A+B) */
-@keyframes clientsLoop{
-  0%{transform:translateX(0)}
-  100%{transform:translateX(-50%)} /* track širine ≈ 200% zbog duplikata */
-}
-
-/* ——— HOME animacije ikonica (blag entry, bez lomljenja) ——— */
-.menu-card{opacity:0;transform:translateY(26px) scale(.92);
-  animation:cardEnter .7s cubic-bezier(.3,.8,.3,1.1) forwards}
-.menu-card:nth-child(1){animation-delay:.05s}
-.menu-card:nth-child(2){animation-delay:.14s}
-.menu-card:nth-child(3){animation-delay:.23s}
-.menu-card:nth-child(4){animation-delay:.32s}
-@keyframes cardEnter{
-  0%{opacity:0;transform:translateY(26px) scale(.92)}
-  60%{opacity:1;transform:translateY(-4px) scale(1.05)}
-  100%{opacity:1;transform:translateY(0) scale(1)}
-}
-
-/* --- O MENI: isključi horizontalni flex sa <body> --- */
-body.page-dark{
-  display:flex;
-  flex-direction: column;   /* header, pa content, pa logoi */
-  align-items: stretch;
-  justify-content: flex-start;
-  min-height: 100dvh;
-  padding: 24px;            /* zadrži postojeći padding */
-}
-
-/* Centralni red: slika + tekst */
-.about-centered{ max-width:1100px; margin:0 auto; }
-.about-center-row{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
-  align-items: start;
-}
-.about-media .about-photo{
-  width:100%; height:auto; display:block;
-  border-radius:16px; box-shadow:0 12px 60px rgba(147,51,234,.18);
-}
-.about-copy{ line-height:1.65; font-size:15.5px }
-.about-copy h3{ font-size:21px; font-weight:800; margin-bottom:10px }
-
-@media (min-width:960px){
-  .about-center-row{
-    grid-template-columns: 420px 1fr;  /* slika levo ~420px, tekst desno */
-    align-items: center;
-    gap: 36px;
-  }
-  .about-copy{ font-size:16.5px }
-}
-
-/* Logoi: beljenje (osim Kimura) i seamless traka */
-.clients{ width:100%; overflow:hidden; padding: 8px 0 26px; }
-.clients-bottom{ max-width:1100px; margin:8px auto 0; }
-.clients-track{
-  display:flex; align-items:center; gap:64px;
-  animation: marqueeX 22s linear infinite;
-  will-change: transform;
-}
-.clients-track img{
-  height:32px; object-fit:contain;
-  filter: brightness(0) invert(1);   /* svi u belo */
-  opacity:.95;
-}
-.clients-track img[alt*="Kimura"]{  /* Kimura crno-belo */
-  filter: grayscale(1) brightness(1);
-}
-@media (min-width:768px){
-  .clients-track img{ height:42px }
-  .clients-track{ gap:80px }
-}
-@keyframes marqueeX{from{transform:translateX(0)} to{transform:translateX(-50%)}}
-
-/* Logo sizing rules */
-.clients-track img {
-  height: 40px;
-  margin-inline: 44px; /* šira margina da se ne seku */
-}
-
-.clients-track img[alt*="Serbia Business Run"] {
-  transform: scale(1.3);
-}
-
-.clients-track img[alt*="Aquarius"] {
-  transform: scale(2);
-}
-
-.clients-track img[alt*="Tattoo Bar"] {
-  transform: scale(2);
-}
-
-.clients-track img[alt*="Power Zone"] {
-  transform: scale(1.4);
-}
-
-/* Kimura ostaje B&W samo */
-.clients-track img[alt*="Kimura"] {
-  filter: grayscale(1) brightness(1.1);
+@media (max-width:768px){
+  .about-layout{grid-template-columns:1fr;gap:24px;text-align:center}
+  .clients-track img{height:34px;margin-inline:32px}
 }
