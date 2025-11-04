@@ -116,7 +116,14 @@ button.btn:active{transform:scale(.98)}
 .about-zfix{position:relative;z-index:4}
 
 /* CTA dugmad ispod teksta */
-.about-buttons{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+.about-buttons {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .btn-cta{padding:10px 18px;border-radius:12px;color:#fff;font-size:.88rem;font-weight:700;text-decoration:none;background:linear-gradient(180deg, rgba(147,51,234,.55), rgba(147,51,234,.28));border:1px solid rgba(147,51,234,.7);box-shadow:0 6px 18px rgba(147,51,234,.25);transition:transform .15s ease, box-shadow .15s ease, background .15s ease}
 .btn-cta:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(147,51,234,.35);background:linear-gradient(180deg, rgba(147,51,234,.65), rgba(147,51,234,.35))}
 .btn-cta.secondary{background:rgba(147,51,234,.12);border-color:rgba(147,51,234,.55)}
