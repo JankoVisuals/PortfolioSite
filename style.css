@@ -151,3 +151,41 @@ button.btn:active{transform:scale(.98)}
   .about-layout{grid-template-columns:1fr;gap:24px;text-align:center}
   .clients-track img{height:34px}
 }
+
+.btn-home {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 18px;
+  text-align: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(147,51,234,.45);
+  backdrop-filter: blur(12px);
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  transition: .2s ease;
+}
+
+.btn-home:active {
+  transform: scale(.96);
+}
+
+@media (min-width: 768px) {
+  .btn-home { width: auto; }
+}
+
+.clients {
+  overflow:hidden;
+  width:100%;
+}
+
+.clients-track {
+  display:flex;
+  animation: marquee 38s linear infinite;
+  will-change: transform;
+}
+
+.clients-track img {
+  margin-right: 32px;
+}
