@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Besplatni resursi • Janko Visuals Produkcija</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body class="page">
   <div class="bg-glow"><div class="bg-glow-circle"></div></div>
@@ -18,31 +17,33 @@
           <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round" />
         </svg>
         <div class="section-title">Besplatni resursi</div>
-        <div class="section-desc">Preuzmi izabrani fajl sa mejla.</div>
+        <div class="section-desc">Preuzmi resurse – stižu na tvoj e-mail.</div>
       </div>
     </div>
 
     <div class="content-block form-card">
-  <div class="content-heading kicker">IZABERI RESURS</div>
+      <div class="content-heading kicker">Izaberi resurs</div>
 
-  <form id="resursi-form" class="form" novalidate>
-    <div class="form-row">
-      <label for="resource">Resurs</label>
-      <select id="resource" name="resource" required>
-        <option value="sfx">SFX Sound Pack (ZIP)</option>
-      </select>
+      <form id="resursi-form" class="form">
+        <div class="form-row">
+          <label for="resource">Resurs</label>
+          <select id="resource" name="resource">
+            <option value="sfx">SFX.zip</option>
+            <option value="cineslog3-luts">CineSlog3 LUTs.zip</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email adresa</label>
+          <input id="email" name="email" type="email" placeholder="ime@domen.com" required />
+        </div>
+
+        <button class="btn" type="submit">Pošalji</button>
+        <div id="status" class="status"></div>
+      </form>
     </div>
-
-    <div class="form-row">
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" placeholder="tvoj@email.com" required />
-    </div>
-
-    <button class="btn" type="submit">Pošalji</button>
-    <div id="status" class="status"></div>
-  </form>
-</div>
-
   </div>
+
+  <script src="/script.js"></script>
 </body>
 </html>
