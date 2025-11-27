@@ -8,7 +8,7 @@ const {
   SUPABASE_URL = '',
   SUPABASE_ANON_KEY = '',
   SUPABASE_PUBLIC_BUCKET = 'videos', // bucket za videe; za resurse može biti drugi (npr. "resources")
-  SUPABASE_PUBLIC_RESOURCES_BUCKET = 'public', // ← promeni ako koristiš drugi bucket za ZIP-ove
+  SUPABASE_PUBLIC_RESOURCES_BUCKET = 'resources', // ← promeni ako koristiš drugi bucket za ZIP-ove
   FROM_EMAIL = 'jankovisuals@gmail.com',
   GMAIL_APP_PASS = '', // Google "App password" (4x4 cifre)
 } = process.env;
