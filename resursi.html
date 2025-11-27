@@ -7,13 +7,15 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body class="page">
+  <!-- Purple glow -->
   <div class="bg-glow"><div class="bg-glow-circle"></div></div>
 
   <div class="page-inner">
+    <!-- Header -->
     <div class="top-bar">
       <a class="back-btn" href="index.html">←</a>
       <div class="section-heading">
-        <svg class="section-icon" viewBox="0 0 24 24">
+        <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round" />
         </svg>
         <div class="section-title">Besplatni resursi</div>
@@ -21,13 +23,14 @@
       </div>
     </div>
 
+    <!-- Forma (glass card) -->
     <div class="content-block form-card">
       <div class="content-heading kicker">Izaberi resurs</div>
 
-      <form id="resursi-form" class="form">
+      <form id="resursi-form" class="form" novalidate>
         <div class="form-row">
           <label for="resource">Resurs</label>
-          <select id="resource" name="resource">
+          <select id="resource" name="resource" required>
             <option value="sfx">SFX.zip</option>
             <option value="cineslog3-luts">CineSlog3 LUTs.zip</option>
           </select>
