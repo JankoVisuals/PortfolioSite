@@ -1,246 +1,58 @@
-// ===== Autoplay + mute u gridu (robustan init) =====
-(function () {
-  const videos = document.querySelectorAll("video.reel, video.feature");
-  if (!videos.length) return;
-
-  // Postavi atribute PRE učitavanja (mobilni autoplay zaht.)
-  videos.forEach((v) => {
-    try {
-      v.setAttribute("muted", "");
-      v.setAttribute("playsinline", "");
-      v.muted = true;
-      v.playsInline = true;
-      v.loop = true;
-      v.dataset.sound = "off"; // UI: krećemo kao muted
-    } catch {}
-  });
-
-  // IntersectionObserver – play/pause po vidljivosti
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      const v = e.target;
-      if (e.isIntersecting) {
-        v.play().catch(() => {
-          setTimeout(() => v.play().catch(()=>{}), 50);
-        });
-      } else {
-        v.pause();
-      }
-    });
-  }, { threshold: 0.35 });
-
-  videos.forEach((v) => {
-    const tryPlay = () => v.play().catch(()=>{});
-    v.addEventListener("loadedmetadata", tryPlay, { once: true });
-    v.addEventListener("canplay", tryPlay, { once: true });
-    setTimeout(tryPlay, 0);
-
-    // Tap na video (grid/feature) — mute toggle
-    v.addEventListener("click", () => {
-      v.muted = !v.muted;
-      v.dataset.sound = v.muted ? "off" : "on"; // CSS menja ikonu
-      v.play().catch(()=>{});
-    });
-
-    io.observe(v);
-  });
-
-  // Mute dugmad u gridu
-  document.querySelectorAll(".mute-btn").forEach((btn) => {
-    btn.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      const wrap = btn.closest(".reel-wrap, .feature-wrap");
-      const v = wrap?.querySelector("video");
-      if (!v) return;
-      v.muted = !v.muted;
-      v.dataset.sound = v.muted ? "off" : "on";
-      v.play().catch(()=>{});
-    });
-  });
-
-  // Kada tab ode u background → pauziraj; vrati kad se vrati
-  document.addEventListener("visibilitychange", () => {
-    videos.forEach(v => {
-      if (document.hidden) v.pause();
-      else if (v.muted) v.play().catch(()=>{});
-    });
-  });
-})();
-
-
-// ===== Fullscreen overlay (TikTok stil + global mute na ulasku) =====
-(function () {
-  const overlay = document.getElementById("fs");
-  if (!overlay) return;
-
-  const fsVideo = document.getElementById("fsVideo");
-  const fsTitle = document.getElementById("fsTitle");
-  const fsSub   = document.getElementById("fsSub");
-  const closeBtn = overlay.querySelector(".fs-close");
-
-  // Čitamo projekte iz DOM-a (redosled: feature pa grid)
-  const nodes = [
-    ...document.querySelectorAll(".feature-wrap"),
-    ...document.querySelectorAll(".reel-card")
-  ];
-
-  const items = nodes.map((node) => {
-    const video = node.querySelector("video");
-    const t = node.dataset.title || node.querySelector(".reel-title")?.textContent || "";
-    const s = node.dataset.sub   || node.querySelector(".reel-sub")?.textContent   || "";
-    return { src: video?.src, title: t, sub: s };
-  }).filter(x => !!x.src);
-
-  // Helpers: global control
-  function pauseAllVideos() {
-    document.querySelectorAll("video").forEach(v => {
-      try { v.muted = true; v.dataset.sound = "off"; v.pause(); } catch {}
-    });
-  }
-  function resumeGridAutoplay() {
-    document.querySelectorAll(".reel, .feature").forEach(v => {
-      try {
-        v.setAttribute("muted", "");
-        v.setAttribute("playsinline", "");
-        v.muted = true;
-        v.dataset.sound = "off"; // UI mute ikone vraćene u mute
-        v.playsInline = true;
-        v.play().catch(()=>{ setTimeout(()=>v.play().catch(()=>{}), 50); });
-      } catch {}
-    });
-  }
-
-  let idx = 0;
-
-  function openAt(i) {
-    idx = Math.max(0, Math.min(items.length - 1, i));
-
-    // 1) Zaustavi SVE i resetuj UI mute stanje u gridu
-    pauseAllVideos(); // -> svi muted + data-sound="off"
-
-    // 2) Podesi fullscreen video
-    const { src, title, sub } = items[idx];
-    fsVideo.removeAttribute("muted");
-    fsVideo.muted = false;         // fullscreen sa zvukom
-    fsVideo.setAttribute("playsinline", "");
-    fsVideo.playsInline = true;
-    fsVideo.loop = true;
-    fsVideo.src = src;
-    fsVideo.currentTime = 0;
-
-    fsTitle.textContent = title || "";
-    fsSub.textContent = sub || "";
-
-    overlay.classList.add("active");
-    document.body.classList.add("no-scroll");
-
-    // Mikro delay – obezbedi da pauze budu primenjene pre play-a
-    setTimeout(() => fsVideo.play().catch(()=>{}), 0);
-  }
-
-  function closeFS() {
-    try { fsVideo.pause(); } catch {}
-    fsVideo.removeAttribute("src");
-    fsVideo.load(); // očisti buffer (Safari bugovi)
-
-    overlay.classList.remove("active");
-    document.body.classList.remove("no-scroll");
-
-    // Vrati grid autoplay (mute) + UI mutiran
-    resumeGridAutoplay();
-  }
-
-  // Klik na fullscreen dugme
-  document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const block = btn.closest(".feature-wrap, .reel-card");
-      const i = nodes.indexOf(block);
-      openAt(i >= 0 ? i : 0);
-    });
-  });
-
-  // Dvoklik na video/tile otvara fullscreen
-  document.querySelectorAll(".feature-wrap, .reel-card .reel-wrap").forEach((wrap) => {
-    wrap.addEventListener("dblclick", () => {
-      const block = wrap.closest(".feature-wrap, .reel-card");
-      const i = nodes.indexOf(block);
-      openAt(i >= 0 ? i : 0);
-    });
-  });
-
-  // Close
-  closeBtn.addEventListener("click", closeFS);
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closeFS(); // klik van videa -> zatvori
-  });
-
-  // Swipe up/down (TikTok navigacija)
-  let startY = 0;
-  overlay.addEventListener("touchstart", (e) => { startY = e.changedTouches[0].clientY; }, { passive:true });
-  overlay.addEventListener("touchend", (e) => {
-    const delta = e.changedTouches[0].clientY - startY;
-    if (Math.abs(delta) < 40) return;
-    if (delta < 0 && idx < items.length - 1) openAt(idx + 1);
-    else if (delta > 0 && idx > 0) openAt(idx - 1);
-  }, { passive:true });
-
-  // ESC / arrows (desktop)
-  window.addEventListener("keydown", (e) => {
-    if (!overlay.classList.contains("active")) return;
-    if (e.key === "Escape") closeFS();
-    if (e.key === "ArrowUp")   openAt(Math.max(0, idx - 1));
-    if (e.key === "ArrowDown") openAt(Math.min(items.length - 1, idx + 1));
-  });
-})();
-
-
-// ===== Email form (ostaje isto) =====
-(function () {
+// -------- Besplatni resursi: submit --------
+(() => {
   const form = document.getElementById("resursi-form");
   if (!form) return;
+
   const status = document.getElementById("status");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = form.email.value.trim();
-    const resource = form.resource.value;
+    const resource_slug = form.resource.value; // "sfx.zip" | "cineslog3-luts.zip"
+
     if (!email) { status.textContent = "Unesi validan email."; return; }
+
     status.textContent = "Šaljem…";
     form.querySelector("button[type=submit]").disabled = true;
 
     try {
-      const res = await fetch("/api/sendResource", {
+      const r = await fetch("/api/sendResource", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, resource_slug: resource })
+        body: JSON.stringify({ email, resource_slug })
       });
-      if (!res.ok) throw new Error(await res.text());
-      status.textContent = "Poslato! Proveri mail.";
+      if (!r.ok) throw new Error(await r.text());
+      status.textContent = "Poslato! Proveri inbox / spam u narednih par minuta.";
       form.reset();
-    } catch {
-      status.textContent = "Greška. Pokušaj ponovo.";
+    } catch (err) {
+      console.error(err);
+      status.textContent = "Nije uspelo. Pokušaj ponovo.";
     } finally {
       form.querySelector("button[type=submit]").disabled = false;
     }
   });
 })();
 
-// Home icon entrance (ako postoji grid menija na indexu)
+// -------- Share dugme na naslovnoj --------
 (() => {
-  const cards = document.querySelectorAll(".menu-card");
-  cards.forEach((c,i)=> setTimeout(()=>c.classList.add("reveal"), i*120));
-})();
+  const btn = document.getElementById("share-site");
+  if (!btn) return;
 
-// (Opc.) Za svaki slučaj, restartuj marquee kad se vrati tab (glitch fix u Mobile Chrome)
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) return;
-  const track = document.querySelector(".marquee-track");
-  if (track){
-    track.style.animation = "none";
-    // force reflow
-    void track.offsetWidth;
-    track.style.animation = "";
-    track.style.animation = "marqueeX 22s linear infinite";
-  }
-});
+  const url = "https://jankovisuals.vercel.app";
+
+  btn.addEventListener("click", async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Janko Visuals",
+          text: "Pogledaj moj portfolio i ponudu.",
+          url
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        btn.dataset.tip = "Kopirano!";
+        setTimeout(() => (btn.dataset.tip = ""), 1500);
+      }
+    } catch {}
+  });
+})();
