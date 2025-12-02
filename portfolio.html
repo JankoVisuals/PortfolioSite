@@ -389,18 +389,14 @@
     }
 
     function layout(){
-      if (!items.length) return;
-      const stage = belt.getBoundingClientRect();
-      const cardW = Math.min(stage.width * 0.22, 320);
-      const gap = cardW * 0.72;
-      const depth = VISIBLE_SPAN + 1;
+  if (!items.length) return;
+  const stage = belt.getBoundingClientRect();
+  const cardW = Math.min(stage.width * 0.22, 320);
+  const gap = cardW * 0.72;
+  const depth = VISIBLE_SPAN + 1;
 
-      // bias po X da špil bude optički u centru (malo ulevo)
-      const bias =
-        stage.width >= 1200 ? -60 :
-        stage.width >= 900  ? -40 :
-        stage.width >= 600  ? -25 :
-                              0;
+  // konstantan optički shift ulevo (na svim širinama)
+  const bias = -stage.width * 0.06;
 
       items.forEach((it, i) => {
         const d = normDelta(i);
