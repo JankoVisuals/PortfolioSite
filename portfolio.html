@@ -66,7 +66,7 @@
       left:50%;
       width:min(22vw, 320px);
       aspect-ratio:9/16;
-      transform:translate(-50%,-53%); /* malo gore da ne bude odsečen dole */
+      transform:translate(-50%,-53%);
       transform-style:preserve-3d;
       border-radius:18px;
       overflow:hidden;
@@ -395,12 +395,19 @@
       const gap = cardW * 0.72;
       const depth = VISIBLE_SPAN + 1;
 
+      // bias po X da špil bude optički u centru (malo ulevo)
+      const bias =
+        stage.width >= 1200 ? -60 :
+        stage.width >= 900  ? -40 :
+        stage.width >= 600  ? -25 :
+                              0;
+
       items.forEach((it, i) => {
         const d = normDelta(i);
         const abs = Math.abs(d);
         const clamped = Math.max(-VISIBLE_SPAN, Math.min(VISIBLE_SPAN, d));
 
-        const x = clamped * gap;
+        const x = clamped * gap + bias;
         const z = 80 - Math.abs(clamped)*80;
         const rotZ = clamped * 8;
         const rotY = clamped * -12;
@@ -438,10 +445,10 @@
         if (i === center){
           try{
             vid.currentTime = 0;
-            vid.muted = !userInteracted; // posle interakcije – sa zvukom
+            vid.muted = !userInteracted;
             const p = vid.play();
             if (p && typeof p.then === "function"){
-              p.catch(()=>{ /* autoplay policy */ });
+              p.catch(()=>{});
             }
           }catch(e){}
         } else {
@@ -562,7 +569,7 @@
       const found = results.filter(r => r.ok);
 
       if (!found.length){
-        counter.textContent = "Nema dostupnih videa.";
+        counter.textContent = "Nema dostupних videa.";
         return;
       }
 
@@ -573,7 +580,7 @@
       });
 
       layout();
-      showTapOverlay(); // prvi put – overlay “Klikni da pustiš”
+      showTapOverlay();
     })();
 
   })();
