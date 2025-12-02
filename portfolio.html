@@ -66,7 +66,7 @@
       left:50%;
       width:min(22vw, 320px);
       aspect-ratio:9/16;
-      transform:translate(-50%,-50%);
+      transform:translate(-50%,-53%); /* malo gore da ne bude odsečen dole */
       transform-style:preserve-3d;
       border-radius:18px;
       overflow:hidden;
@@ -98,6 +98,26 @@
 
     .card.is-center{
       filter:drop-shadow(0 22px 64px rgba(168,85,247,.55));
+    }
+
+    /* overlay “Klikni da pustiš” */
+    .tap-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at 50% 0, rgba(168,85,247,.45), transparent 65%),
+        rgba(0,0,0,.55);
+      color:#fff;
+      font-weight:600;
+      font-size:0.9rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-align:center;
+      pointer-events:auto;
+      z-index:5;
     }
 
     .nav{
@@ -147,44 +167,31 @@
       z-index:40;
     }
 
+    /* Kontakt — identično .btn-home sa „O meni“ */
     .contact-cta{
       display:flex;
       justify-content:center;
       width:100%;
+      margin-top:8px;
     }
-    .contact-cta a{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:0.55rem 1.7rem;
-      border-radius:12px;
+    .btn-home{
+      width:100%;
+      max-width:300px;
+      padding:12px 18px;
+      text-align:center;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(147,51,234,.45);
+      backdrop-filter:blur(12px);
+      font-weight:700;
       color:#fff;
       text-decoration:none;
-      font-weight:700;
-      font-size:0.95rem;
-      letter-spacing:.2px;
-      background:#090214;
-      border:1px solid rgba(168,85,247,.95);
-      box-shadow:
-        0 0 0 1px rgba(168,85,247,.7),
-        0 0 28px rgba(168,85,247,.55);
-      min-width:130px;
-      text-align:center;
-      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+      transition:.2s ease;
     }
-    .contact-cta a:hover{
-      transform:translateY(-1px);
-      background:#13052a;
-      box-shadow:
-        0 0 0 1px rgba(168,85,247,1),
-        0 0 40px rgba(168,85,247,.7);
+    .btn-home:active{
+      transform:scale(.96);
     }
-    .contact-cta a:active{
-      transform:translateY(1px) scale(.985);
-      box-shadow:
-        0 0 0 1px rgba(168,85,247,.9),
-        0 0 18px rgba(168,85,247,.5);
-    }
+    .btn-home{width:auto;}
 
     /* Fullscreen overlay */
     .fs-overlay{
@@ -261,7 +268,7 @@
     </section>
 
     <div class="contact-cta">
-      <a href="kontakt.html" aria-label="Otvori kontakt stranicu">Kontakt</a>
+      <a class="btn-home" href="/kontakt.html">Kontakt</a>
     </div>
   </div>
 
@@ -299,6 +306,33 @@
     let center = 0;
     let userInteracted = false;
 
+    let tapOverlay = null;
+    let tapOverlayActive = false;
+
+    function showTapOverlay(){
+      if (!items.length || tapOverlayActive) return;
+      const centerItem = items[center];
+      const ov = document.createElement("div");
+      ov.className = "tap-overlay";
+      ov.textContent = "Klikni da pustiš";
+      ov.addEventListener("click", () => {
+        userInteracted = true;
+        hideTapOverlay();
+        playCenter();
+      });
+      centerItem.el.appendChild(ov);
+      tapOverlay = ov;
+      tapOverlayActive = true;
+    }
+
+    function hideTapOverlay(){
+      if (tapOverlay && tapOverlay.parentNode){
+        tapOverlay.parentNode.removeChild(tapOverlay);
+      }
+      tapOverlay = null;
+      tapOverlayActive = false;
+    }
+
     function createCard(src, idx){
       const card = document.createElement("figure");
       card.className = "card";
@@ -324,8 +358,16 @@
       card.appendChild(v);
 
       card.addEventListener("click", () => {
-        userInteracted = true;
         const myIndex = items.findIndex(it => it.el === card);
+        if (tapOverlayActive) {
+          userInteracted = true;
+          hideTapOverlay();
+          center = myIndex;
+          layout();
+          playCenter();
+          return;
+        }
+        userInteracted = true;
         if (myIndex === center){
           openFs(items[center]);
         } else {
@@ -365,7 +407,7 @@
         const scale = 1 - Math.min(abs*0.06, 0.35);
 
         it.el.style.transform =
-          "translate(-50%,-50%) translateX("+x+"px) translateZ("+z+"px) rotateZ("+rotZ+"deg) rotateY("+rotY+"deg) scale("+scale+")";
+          "translate(-50%,-53%) translateX("+x+"px) translateZ("+z+"px) rotateZ("+rotZ+"deg) rotateY("+rotY+"deg) scale("+scale+")";
 
         it.el.style.opacity = "1";
         if (it.video){
@@ -396,7 +438,7 @@
         if (i === center){
           try{
             vid.currentTime = 0;
-            vid.muted = !userInteracted; // posle prve interakcije – puštamo sa zvukom
+            vid.muted = !userInteracted; // posle interakcije – sa zvukom
             const p = vid.play();
             if (p && typeof p.then === "function"){
               p.catch(()=>{ /* autoplay policy */ });
@@ -414,16 +456,21 @@
     function next(){
       center = (center + 1) % items.length;
       layout();
+      hideTapOverlay();
       playCenter();
+      userInteracted = true;
     }
     function prev(){
       center = (center - 1 + items.length) % items.length;
       layout();
+      hideTapOverlay();
       playCenter();
+      userInteracted = true;
     }
 
     function openFs(item){
       if (!fsOverlay || !fsVideo) return;
+      hideTapOverlay();
       try{ item.video.pause(); }catch(e){}
       const src = item.video.currentSrc || item.video.src || item.src;
       fsVideo.src = src;
@@ -459,18 +506,17 @@
       }
     });
 
-    btnNext.addEventListener("click", () => { userInteracted = true; next(); });
-    btnPrev.addEventListener("click", () => { userInteracted = true; prev(); });
+    btnNext.addEventListener("click", () => { next(); });
+    btnPrev.addEventListener("click", () => { prev(); });
 
     window.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight"){ userInteracted = true; next(); }
-      else if (e.key === "ArrowLeft"){ userInteracted = true; prev(); }
+      if (e.key === "ArrowRight"){ next(); }
+      else if (e.key === "ArrowLeft"){ prev(); }
     });
 
     let dragX = null;
     belt.addEventListener("pointerdown", (e) => {
       dragX = e.clientX;
-      userInteracted = true;
     });
     window.addEventListener("pointerup", (e) => {
       if (dragX == null) return;
@@ -527,7 +573,7 @@
       });
 
       layout();
-      // ne puštamo odmah – prvi put će krenuti kad korisnik klikne strelicu ili sam klip
+      showTapOverlay(); // prvi put – overlay “Klikni da pustiš”
     })();
 
   })();
