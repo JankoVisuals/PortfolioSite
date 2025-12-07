@@ -242,7 +242,7 @@
       background:rgba(22,7,60,1);
     }
 
-    /* MOBILNI: nema strelica, samo swipe */
+    /* telefon: nema strelica, samo swipe */
     @media (max-width:820px){
       .wrapper{padding:20px 12px 24px;}
       .stage{height:calc(100vh - 150px);}
@@ -304,6 +304,9 @@
 
     let tapOverlay = null;
     let tapOverlayActive = false;
+
+    // automatski bias koji poravnava srednju karticu sa centrom stage-a
+    let autoBias = 0;
 
     function showTapOverlay(){
       if (!items.length || tapOverlayActive) return;
@@ -386,13 +389,11 @@
 
     function layout(){
       if (!items.length) return;
-      const stage = belt.getBoundingClientRect();
-      const cardW = Math.min(stage.width * 0.22, 320);
+      const stageRect = belt.getBoundingClientRect();
+      const cardW = Math.min(stageRect.width * 0.22, 320);
       const gap = cardW * 0.72;
       const depth = VISIBLE_SPAN + 1;
-
-      // NEMA bias-a: sve se vrti oko geometrijskog centra stage-a
-      const bias = 0;
+      const bias = autoBias;   // ovde se koristi automatski izračunat pomak
 
       items.forEach((it, i) => {
         const d = normDelta(i);
@@ -428,6 +429,19 @@
       });
 
       counter.textContent = (center+1) + " / " + items.length;
+    }
+
+    function recomputeAutoBias(){
+      if (!items.length) return;
+      const centerItem = items[center].el;
+      const cardRect = centerItem.getBoundingClientRect();
+      const stageRect = document.querySelector(".stage").getBoundingClientRect();
+
+      const cardCx = cardRect.left + cardRect.width / 2;
+      const stageCx = stageRect.left + stageRect.width / 2;
+
+      // koliko treba da pomerimo da bi centar kartice seo u centar stage-a
+      autoBias += (stageCx - cardCx);
     }
 
     function playCenter(){
@@ -508,7 +522,7 @@
     if (btnNext) btnNext.addEventListener("click", () => { next(); });
     if (btnPrev) btnPrev.addEventListener("click", () => { prev(); });
 
-    // swipe (radi i na telefonu)
+    // swipe (radi i na telefonu i na desktopu)
     let dragX = null;
     let dragY = null;
     belt.addEventListener("pointerdown", (e) => {
@@ -526,7 +540,13 @@
       }
     });
 
-    window.addEventListener("resize", () => layout());
+    window.addEventListener("resize", () => {
+      if (!items.length) return;
+      autoBias = 0;
+      layout();
+      recomputeAutoBias();
+      layout();
+    });
 
     async function probeOne(i){
       const src = VIDEO_BASE + i + ".mp4";
@@ -571,7 +591,11 @@
         items.push(item);
       });
 
+      // prvi layout bez bias-a → izmeri → drugi layout sa autoBias-om
       layout();
+      recomputeAutoBias();
+      layout();
+
       showTapOverlay();
     })();
 
