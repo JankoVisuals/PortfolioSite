@@ -100,7 +100,6 @@
       filter:drop-shadow(0 22px 64px rgba(168,85,247,.55));
     }
 
-    /* overlay “Klikni da pustiš” */
     .tap-overlay{
       position:absolute;
       inset:0;
@@ -167,7 +166,6 @@
       z-index:40;
     }
 
-    /* Kontakt — identično .btn-home sa „O meni“ */
     .contact-cta{
       display:flex;
       justify-content:center;
@@ -193,7 +191,6 @@
     }
     .btn-home{width:auto;}
 
-    /* Fullscreen overlay */
     .fs-overlay{
       position:fixed;
       inset:0;
@@ -245,12 +242,12 @@
       background:rgba(22,7,60,1);
     }
 
-    /* mobile */
+    /* MOBILNI: nema strelica, samo swipe */
     @media (max-width:820px){
       .wrapper{padding:20px 12px 24px;}
       .stage{height:calc(100vh - 150px);}
       .card{width:min(64vw, 320px);}
-      .nav{width:46px;height:46px;}
+      .nav{display:none;}
     }
   </style>
 </head>
@@ -272,7 +269,6 @@
     </div>
   </div>
 
-  <!-- Fullscreen overlay -->
   <div class="fs-overlay" id="fsOverlay" aria-hidden="true">
     <div class="fs-inner">
       <button class="fs-close" id="fsClose" aria-label="Zatvori video">×</button>
@@ -289,7 +285,7 @@
   (function(){
     "use strict";
 
-    const VIDEO_BASE = "https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/"; // po potrebi promeni
+    const VIDEO_BASE = "https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/";
     const PROBE_MAX = 50;
     const VISIBLE_SPAN = 4;
 
@@ -314,7 +310,7 @@
       const centerItem = items[center];
       const ov = document.createElement("div");
       ov.className = "tap-overlay";
-      ov.textContent = "Klikni da pustiš";
+      ov.textContent = "KLIKNI DA PUSTIŠ";
       ov.addEventListener("click", () => {
         userInteracted = true;
         hideTapOverlay();
@@ -389,14 +385,14 @@
     }
 
     function layout(){
-  if (!items.length) return;
-  const stage = belt.getBoundingClientRect();
-  const cardW = Math.min(stage.width * 0.22, 320);
-  const gap = cardW * 0.72;
-  const depth = VISIBLE_SPAN + 1;
+      if (!items.length) return;
+      const stage = belt.getBoundingClientRect();
+      const cardW = Math.min(stage.width * 0.22, 320);
+      const gap = cardW * 0.72;
+      const depth = VISIBLE_SPAN + 1;
 
-  // konstantan optički shift ulevo (na svim širinama)
-  const bias = -stage.width * 0.07;
+      // NEMA bias-a: sve se vrti oko geometrijskog centra stage-a
+      const bias = 0;
 
       items.forEach((it, i) => {
         const d = normDelta(i);
@@ -509,25 +505,25 @@
       }
     });
 
-    btnNext.addEventListener("click", () => { next(); });
-    btnPrev.addEventListener("click", () => { prev(); });
+    if (btnNext) btnNext.addEventListener("click", () => { next(); });
+    if (btnPrev) btnPrev.addEventListener("click", () => { prev(); });
 
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight"){ next(); }
-      else if (e.key === "ArrowLeft"){ prev(); }
-    });
-
+    // swipe (radi i na telefonu)
     let dragX = null;
+    let dragY = null;
     belt.addEventListener("pointerdown", (e) => {
       dragX = e.clientX;
+      dragY = e.clientY;
     });
     window.addEventListener("pointerup", (e) => {
       if (dragX == null) return;
       const dx = e.clientX - dragX;
-      dragX = null;
+      const dy = e.clientY - dragY;
+      dragX = dragY = null;
       const TH = 40;
-      if (dx > TH) prev();
-      else if (dx < -TH) next();
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > TH){
+        if (dx > 0) prev(); else next();
+      }
     });
 
     window.addEventListener("resize", () => layout());
@@ -565,7 +561,7 @@
       const found = results.filter(r => r.ok);
 
       if (!found.length){
-        counter.textContent = "Nema dostupних videa.";
+        counter.textContent = "Nema dostupnih videa.";
         return;
       }
 
