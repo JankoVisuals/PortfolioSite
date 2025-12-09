@@ -210,3 +210,137 @@ button.btn:active{transform:scale(.98)}
   content: attr(data-tip);
   margin-left:8px; font-weight:600; opacity:.9;
 }
+
+
+
+/* === White theme redesign overrides === */
+
+/* Base */
+body{
+  background:#ffffff;
+  color:#111827;
+}
+
+/* Subpages wrapper */
+.page{
+  background:#ffffff;
+  color:#111827;
+}
+
+/* Kill old purple glow background */
+.bg-glow,
+.bg-glow-circle{
+  display:none !important;
+}
+body::after{
+  content:none !important;
+}
+
+/* Typography */
+.brand-title{
+  color:#111827;
+}
+.brand-sub{
+  color:#6b7280;
+}
+
+.section-title{
+  color:#111827;
+}
+.section-desc{
+  color:#4b5563;
+}
+
+.content-block{
+  background:#f9fafb;
+  border-color:#e5e7eb;
+}
+.content-heading{
+  color:#6b7280;
+}
+.content-text{
+  color:#111827;
+}
+
+/* Contact blocks */
+.contact-item{
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  color:#111827;
+}
+.contact-label{
+  color:#6b7280;
+}
+.contact-value{
+  color:#111827;
+}
+
+/* Cards / reels / form */
+.feature-wrap,
+.reel-wrap,
+.form-card{
+  background:#f9fafb;
+  border-color:#e5e7eb;
+  box-shadow:none;
+}
+
+/* Inputs */
+label{
+  color:#4b5563;
+}
+select,
+input[type="email"]{
+  background:#ffffff;
+  color:#111827;
+  border-color:#d1d5db;
+}
+input::placeholder{
+  color:#9ca3af;
+}
+
+/* Clients strip – use natural logo colors */
+.clients-track img{
+  filter:none !important;
+}
+
+/* Buttons – dark grey fill, purple outline */
+button.btn,
+.btn-cta,
+.btn.icon-btn,
+.back-btn,
+.reel-btn,
+.fs-close,
+#shareBtn{
+  background:#111827 !important;
+  color:#f9fafb !important;
+  border-color:rgba(147,51,234,.65) !important;
+  box-shadow:none !important;
+}
+
+/* 2x2 grid cards – darker but subtle, with purple border */
+.menu-card{
+  background:#111827;
+  border-radius:1rem;
+  border:1px solid rgba(147,51,234,.45);
+}
+.menu-label{
+  color:#f9fafb;
+}
+
+/* New subtle entrance animations */
+.brand-logo{
+  opacity:0;
+  transform:translateY(10px);
+  animation:brandIn .55s ease-out .05s forwards;
+}
+
+/* Replace bouncy card animation with calmer motion */
+@keyframes cardEnter{
+  0%{opacity:0;transform:translateY(18px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+
+@keyframes brandIn{
+  0%{opacity:0;transform:translateY(14px);}
+  100%{opacity:1;transform:translateY(0);}
+}
