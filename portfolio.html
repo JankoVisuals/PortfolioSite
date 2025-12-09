@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio • Reels</title>
+  <style>
+    :root{
+      --bg0:#05050b;
+      --bg1:#0b0615;
+      --fg:#eae7ff;
+      --muted:#a6a0c2;
+      --accent:#A855F7;
+      --accent-2:#c084fc;
+      --ring: rgba(168,85,247,.38);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--fg);
+      background:
+        radial-gradient(1200px 800px at 50% -10%, rgba(168,85,247,0.9) 0%, transparent 55%),
+        radial-gradient(1000px 600px at 90% 120%, #1c0b3d 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+    }
+
+    .wrapper{
+      min-height:100vh;
+      padding:32px 20px 32px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .stage{
+      position:relative;
+      width:min(1600px, 94vw);
+      height:min(82vh, 820px);
+      margin:0 auto;
+      background:
+        radial-gradient(120% 200% at 50% -40%, rgba(168,85,247,.28), transparent 60%),
+        rgba(10,5,24,0.97);
+      border-radius:28px;
+      padding:20px;
+      box-shadow:0 20px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.04);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .belt{
+      position:relative;
+      width:100%;
+      height:100%;
+      perspective:1600px;
+    }
+
+    .card{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:min(22vw, 320px);
+      aspect-ratio:9/16;
+      transform:translate(-50%,-53%);
+      transform-style:preserve-3d;
+      border-radius:18px;
+      overflow:hidden;
+      background:#05040a;
+      box-shadow:0 24px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04) inset;
+      transition:
+        transform .45s cubic-bezier(.2,.8,.2,1),
+        filter .3s ease,
+        opacity .3s ease;
+      will-change:transform;
+      cursor:pointer;
+    }
+    .card video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      background:#000;
+      transition:filter .25s ease;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:18px;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+
+    .card.is-center{
+      filter:drop-shadow(0 22px 64px rgba(168,85,247,.55));
+    }
+
+    .tap-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at 50% 0, rgba(168,85,247,.45), transparent 65%),
+        rgba(0,0,0,.55);
+      color:#fff;
+      font-weight:600;
+      font-size:0.9rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-align:center;
+      pointer-events:auto;
+      z-index:5;
+    }
+
+    .nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:52px;
+      height:52px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      border:1px solid var(--ring);
+      color:#fff;
+      cursor:pointer;
+      user-select:none;
+      background:rgba(17,8,38,.8);
+      backdrop-filter:blur(6px);
+      transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
+      box-shadow:0 0 0 1px rgba(0,0,0,.7), 0 10px 25px rgba(0,0,0,.7);
+      z-index:50;
+    }
+    .nav:hover{
+      background:rgba(33,12,72,.95);
+      box-shadow:0 0 0 1px rgba(168,85,247,.6), 0 12px 30px rgba(0,0,0,.85);
+    }
+    .nav:active{
+      transform:translateY(-50%) scale(.97);
+      box-shadow:0 4px 12px rgba(0,0,0,.9);
+    }
+    .nav--prev{left:14px;}
+    .nav--next{right:14px;}
+    .nav svg{width:20px;height:20px;}
+
+    .counter{
+      position:absolute;
+      bottom:16px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:.9rem;
+      color:var(--muted);
+      background:rgba(5,3,18,.9);
+      padding:.35rem .9rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 8px 20px rgba(0,0,0,.7);
+      backdrop-filter:blur(4px);
+      z-index:40;
+    }
+
+    .contact-cta{
+      display:flex;
+      justify-content:center;
+      width:100%;
+      margin-top:8px;
+    }
+    .btn-home{
+      width:100%;
+      max-width:300px;
+      padding:12px 18px;
+      text-align:center;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(147,51,234,.45);
+      backdrop-filter:blur(12px);
+      font-weight:700;
+      color:#fff;
+      text-decoration:none;
+      transition:.2s ease;
+    }
+    .btn-home:active{
+      transform:scale(.96);
+    }
+    .btn-home{width:auto;}
+
+    .fs-overlay{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(120% 200% at 50% -40%, rgba(168,85,247,.35), transparent 60%),
+        rgba(1,1,12,.97);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    .fs-overlay.is-open{
+      display:flex;
+    }
+    .fs-inner{
+      position:relative;
+      width:min(100vw, 560px);
+      max-height:100vh;
+      padding:20px;
+    }
+    .fs-inner video{
+      width:100%;
+      height:auto;
+      max-height:calc(100vh - 80px);
+      border-radius:22px;
+      background:#000;
+      box-shadow:0 30px 80px rgba(0,0,0,.95);
+      display:block;
+    }
+    .fs-close{
+      position:absolute;
+      top:18px;
+      right:24px;
+      width:36px;
+      height:36px;
+      border-radius:999px;
+      border:none;
+      background:rgba(11,3,29,.98);
+      color:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size:20px;
+      line-height:1;
+      box-shadow:0 0 0 1px rgba(168,85,247,.9);
+      z-index:10000;
+    }
+    .fs-close:hover{
+      background:rgba(22,7,60,1);
+    }
+
+    /* telefon: nema strelica, samo swipe */
+    @media (max-width:820px){
+      .wrapper{padding:20px 12px 24px;}
+      .stage{height:calc(100vh - 150px);}
+      .card{width:min(64vw, 320px);}
+      .nav{display:none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <section class="stage" aria-label="Reels karusel">
+      <div class="belt" id="belt" role="listbox" aria-live="polite"></div>
+      <button class="nav nav--prev" id="btnPrev" aria-label="Prethodni reel" title="Prethodni (←)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="nav nav--next" id="btnNext" aria-label="Sledeći reel" title="Sledeći (→)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="counter" id="counter" aria-live="polite" aria-atomic="true">Učitavanje…</div>
+    </section>
+
+    <div class="contact-cta">
+      <a class="btn-home" href="/kontakt.html">Kontakt</a>
+    </div>
+  </div>
+
+  <div class="fs-overlay" id="fsOverlay" aria-hidden="true">
+    <div class="fs-inner">
+      <button class="fs-close" id="fsClose" aria-label="Zatvori video">×</button>
+      <video id="fsVideo"
+             playsinline
+             controls
+             controlsList="nodownload noplaybackrate noremoteplayback"
+             disablepictureinpicture
+             x-webkit-airplay="deny"></video>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    "use strict";
+
+    const VIDEO_BASE = "https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/";
+    const PROBE_MAX = 50;
+    const VISIBLE_SPAN = 4;
+
+    const belt = document.getElementById("belt");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const counter = document.getElementById("counter");
+
+    const fsOverlay = document.getElementById("fsOverlay");
+    const fsVideo = document.getElementById("fsVideo");
+    const fsClose = document.getElementById("fsClose");
+
+    let items = [];
+    let center = 0;
+    let userInteracted = false;
+
+    let tapOverlay = null;
+    let tapOverlayActive = false;
+
+    // automatski bias koji poravnava srednju karticu sa centrom stage-a
+    let autoBias = 0;
+
+    function showTapOverlay(){
+      if (!items.length || tapOverlayActive) return;
+      const centerItem = items[center];
+      const ov = document.createElement("div");
+      ov.className = "tap-overlay";
+      ov.textContent = "KLIKNI DA PUSTIŠ";
+      ov.addEventListener("click", () => {
+        userInteracted = true;
+        hideTapOverlay();
+        playCenter();
+      });
+      centerItem.el.appendChild(ov);
+      tapOverlay = ov;
+      tapOverlayActive = true;
+    }
+
+    function hideTapOverlay(){
+      if (tapOverlay && tapOverlay.parentNode){
+        tapOverlay.parentNode.removeChild(tapOverlay);
+      }
+      tapOverlay = null;
+      tapOverlayActive = false;
+    }
+
+    function createCard(src, idx){
+      const card = document.createElement("figure");
+      card.className = "card";
+      card.setAttribute("role","option");
+      card.setAttribute("aria-label","Reel #" + idx);
+      card.dataset.index = String(idx);
+
+      const v = document.createElement("video");
+      v.className = "reel";
+      v.playsInline = true;
+      v.setAttribute("playsinline","");
+      v.preload = "metadata";
+      v.muted = true;
+      v.setAttribute("muted","");
+      v.loop = true;
+      v.crossOrigin = "anonymous";
+      v.setAttribute("disablepictureinpicture","");
+      v.setAttribute("controlsList","nodownload noplaybackrate noremoteplayback");
+      v.setAttribute("x-webkit-airplay","deny");
+      v.disableRemotePlayback = true;
+      v.src = src;
+
+      card.appendChild(v);
+
+      card.addEventListener("click", () => {
+        const myIndex = items.findIndex(it => it.el === card);
+        if (tapOverlayActive) {
+          userInteracted = true;
+          hideTapOverlay();
+          center = myIndex;
+          layout();
+          playCenter();
+          return;
+        }
+        userInteracted = true;
+        if (myIndex === center){
+          openFs(items[center]);
+        } else {
+          center = myIndex;
+          layout();
+          playCenter();
+        }
+      });
+
+      return { idx, src, el: card, video: v };
+    }
+
+    function normDelta(i){
+      const n = items.length;
+      let d = (i - center) % n;
+      if (d < -n/2) d += n;
+      if (d >  n/2) d -= n;
+      return d;
+    }
+
+    function layout(){
+      if (!items.length) return;
+      const stageRect = belt.getBoundingClientRect();
+      const cardW = Math.min(stageRect.width * 0.22, 320);
+      const gap = cardW * 0.72;
+      const depth = VISIBLE_SPAN + 1;
+      const bias = autoBias;   // ovde se koristi automatski izračunat pomak
+
+      items.forEach((it, i) => {
+        const d = normDelta(i);
+        const abs = Math.abs(d);
+        const clamped = Math.max(-VISIBLE_SPAN, Math.min(VISIBLE_SPAN, d));
+
+        const x = clamped * gap + bias;
+        const z = 80 - Math.abs(clamped)*80;
+        const rotZ = clamped * 8;
+        const rotY = clamped * -12;
+        const scale = 1 - Math.min(abs*0.06, 0.35);
+
+        it.el.style.transform =
+          "translate(-50%,-53%) translateX("+x+"px) translateZ("+z+"px) rotateZ("+rotZ+"deg) rotateY("+rotY+"deg) scale("+scale+")";
+
+        it.el.style.opacity = "1";
+        if (it.video){
+          const dim = 1 - Math.min(abs*0.25, 0.85);
+          it.video.style.filter = "brightness("+(0.45 + dim*0.55)+")";
+        }
+
+        const depthIndex = Math.min(abs, depth);
+        const zIndex = (depth - depthIndex) * 10 + (d > 0 ? 1 : 0);
+        it.el.style.zIndex = String(zIndex);
+
+        if (d === 0){
+          it.el.classList.add("is-center");
+          it.el.setAttribute("aria-selected","true");
+        } else {
+          it.el.classList.remove("is-center");
+          it.el.removeAttribute("aria-selected");
+        }
+      });
+
+      counter.textContent = (center+1) + " / " + items.length;
+    }
+
+    function recomputeAutoBias(){
+      if (!items.length) return;
+      const centerItem = items[center].el;
+      const cardRect = centerItem.getBoundingClientRect();
+      const stageRect = document.querySelector(".stage").getBoundingClientRect();
+
+      const cardCx = cardRect.left + cardRect.width / 2;
+      const stageCx = stageRect.left + stageRect.width / 2;
+
+      // koliko treba da pomerimo da bi centar kartice seo u centar stage-a
+      autoBias += (stageCx - cardCx);
+    }
+
+    function playCenter(){
+      if (!items.length) return;
+      items.forEach((it, i) => {
+        const vid = it.video;
+        if (i === center){
+          try{
+            vid.currentTime = 0;
+            vid.muted = !userInteracted;
+            const p = vid.play();
+            if (p && typeof p.then === "function"){
+              p.catch(()=>{});
+            }
+          }catch(e){}
+        } else {
+          try{
+            vid.pause();
+            vid.muted = true;
+          }catch(e){}
+        }
+      });
+    }
+
+    function next(){
+      center = (center + 1) % items.length;
+      layout();
+      hideTapOverlay();
+      playCenter();
+      userInteracted = true;
+    }
+    function prev(){
+      center = (center - 1 + items.length) % items.length;
+      layout();
+      hideTapOverlay();
+      playCenter();
+      userInteracted = true;
+    }
+
+    function openFs(item){
+      if (!fsOverlay || !fsVideo) return;
+      hideTapOverlay();
+      try{ item.video.pause(); }catch(e){}
+      const src = item.video.currentSrc || item.video.src || item.src;
+      fsVideo.src = src;
+      fsVideo.currentTime = 0;
+      fsVideo.muted = false;
+      fsOverlay.classList.add("is-open");
+      fsOverlay.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+      try{ fsVideo.play().catch(()=>{}); }catch(e){}
+    }
+
+    function closeFs(){
+      if (!fsOverlay || !fsVideo) return;
+      fsOverlay.classList.remove("is-open");
+      fsOverlay.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+      try{ fsVideo.pause(); }catch(e){}
+      fsVideo.removeAttribute("src");
+      playCenter();
+    }
+
+    if (fsClose){
+      fsClose.addEventListener("click", closeFs);
+    }
+    if (fsOverlay){
+      fsOverlay.addEventListener("click", (e) => {
+        if (e.target === fsOverlay) closeFs();
+      });
+    }
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && fsOverlay && fsOverlay.classList.contains("is-open")){
+        closeFs();
+      }
+    });
+
+    if (btnNext) btnNext.addEventListener("click", () => { next(); });
+    if (btnPrev) btnPrev.addEventListener("click", () => { prev(); });
+
+    // swipe (radi i na telefonu i na desktopu)
+    let dragX = null;
+    let dragY = null;
+    belt.addEventListener("pointerdown", (e) => {
+      dragX = e.clientX;
+      dragY = e.clientY;
+    });
+    window.addEventListener("pointerup", (e) => {
+      if (dragX == null) return;
+      const dx = e.clientX - dragX;
+      const dy = e.clientY - dragY;
+      dragX = dragY = null;
+      const TH = 40;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > TH){
+        if (dx > 0) prev(); else next();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (!items.length) return;
+      autoBias = 0;
+      layout();
+      recomputeAutoBias();
+      layout();
+    });
+
+    async function probeOne(i){
+      const src = VIDEO_BASE + i + ".mp4";
+      return new Promise(resolve => {
+        const v = document.createElement("video");
+        v.preload = "metadata";
+        v.muted = true;
+        v.playsInline = true;
+        v.crossOrigin = "anonymous";
+
+        const ok = () => { cleanup(); resolve({ ok:true, src }); };
+        const bad = () => { cleanup(); resolve({ ok:false, src }); };
+
+        function cleanup(){
+          v.removeEventListener("loadedmetadata", ok);
+          v.removeEventListener("error", bad);
+        }
+
+        v.addEventListener("loadedmetadata", ok, { once:true });
+        v.addEventListener("error", bad, { once:true });
+
+        v.src = src + "#t=0.1";
+      });
+    }
+
+    (async function init(){
+      const probes = [];
+      for (let i=1;i<=PROBE_MAX;i++){
+        probes.push(probeOne(i));
+      }
+      const results = await Promise.all(probes);
+      const found = results.filter(r => r.ok);
+
+      if (!found.length){
+        counter.textContent = "Nema dostupnih videa.";
+        return;
+      }
+
+      found.forEach((r, idx) => {
+        const item = createCard(r.src, idx+1);
+        belt.appendChild(item.el);
+        items.push(item);
+      });
+
+      // prvi layout bez bias-a → izmeri → drugi layout sa autoBias-om
+      layout();
+      recomputeAutoBias();
+      layout();
+
+      showTapOverlay();
+    })();
+
+  })();
+  </script>
+</body>
+</html>

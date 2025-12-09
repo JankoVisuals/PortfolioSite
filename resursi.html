@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Besplatni resursi — Janko Visuals</title>
+  <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="page">
+  <header class="page-header">
+    <a class="back-btn" href="/"><span>←</span></a>
+    <div>
+      <h2>Besplatni resursi</h2>
+      <p class="subtitle">Preuzmi izabrani fajl sa mejla.</p>
+    </div>
+  </header>
+
+  <main class="page-inner">
+    <section class="content-block form-card">
+      <h3 class="content-heading kicker">Izaberi resurs</h3>
+
+      <form id="resursi-form" class="form">
+        <div class="form-row">
+          <label for="resource">Resurs</label>
+          <select id="resource" name="resource">
+            <option value="sfx">SFX Sound Pack (ZIP)</option>
+            <option value="cineslog3-luts">CineSlog3 LUTs (ZIP)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" placeholder="tvoj@email.com" required />
+        </div>
+        <button type="submit" class="btn">Pošalji</button>
+        <div id="status" class="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById("resursi-form");
+      const status = document.getElementById("status");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = form.email.value.trim();
+        const resource = form.resource.value;
+        if (!email) { status.textContent = "Unesi validan email."; return; }
+        status.textContent = "Šaljem…";
+        form.querySelector("button[type=submit]").disabled = true;
+        try {
+          const r = await fetch("/api/sendResource", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, resource_slug: resource })
+          });
+          if (!r.ok) throw new Error(await r.text());
+          status.textContent = "Poslato! Proveri inbox/promotions/spam.";
+          form.reset();
+        } catch (err) {
+          status.textContent = "Nije uspelo. Pokušaj ponovo.";
+          console.error(err);
+        } finally {
+          form.querySelector("button[type=submit]").disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

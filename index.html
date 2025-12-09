@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="Janko Visuals Produkcija — mobile portfolio sa brzim pristupom: Portfolio, O meni, Kontakt, Besplatni resursi." />
+  <meta property="og:title" content="Janko Visuals Produkcija" />
+  <meta property="og:description" content="Video produkcija fokusirana na rezultat — mobile QR sajt." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/Janko%20visuals-dark.png" />
+  <title>Janko Visuals Produkcija</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Scripts -->
+  <script defer src="script.js"></script>
+
+  <style>
+    /* mikro-polish za home: safe-area i disable tap highlight (ne dira postojeći css) */
+    :root { --safe: env(safe-area-inset-top); }
+    body { padding-top: calc(24px + var(--safe)); -webkit-tap-highlight-color: transparent; }
+
+    /* responsive logo bez potrebe da menjaš style.css */
+    .brand-logo { width: 220px; max-width: 70vw; height: auto; display:block; }
+
+    /* share dugme – fiksirano pri dnu, neutralno da ne utiče na ostalo */
+    #shareBtn {
+      position: fixed; left: 50%; transform: translateX(-50%);
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      padding: 10px 14px; border-radius: 12px;
+      border: 1px solid rgba(147,51,234,.6);
+      background:#111827;
+      color: #fff; font-weight: 700; letter-spacing: .02em;
+      z-index: 50;
+    }
+    #shareToast {
+      position: fixed; left: 50%; transform: translateX(-50%);
+      bottom: calc(56px + env(safe-area-inset-bottom));
+      background: rgba(17,24,39,.9); color:#f9fafb; padding:8px 12px;
+      border:1px solid rgba(255,255,255,.15); border-radius:10px;
+      font-size:.85rem; opacity:0; pointer-events:none; transition:opacity .2s;
+      z-index: 50;
+    }
+    #shareToast.show { opacity:1; }
+    @media (max-width: 340px){ .wrapper{ max-width: 320px; } }
+  </style>
+</head>
+<body>
+  <!-- pulsirajuća ljubičasta pozadina -->
+  <div class="bg-glow"><div class="bg-glow-circle"></div></div>
+
+  <div class="wrapper" role="main" aria-label="Glavni meni">
+    <!-- brend blok iznad grida (zamenjeno logom) -->
+    <header class="brand" aria-label="Janko Visuals Produkcija">
+      <img src="/assets/Janko%20visuals-dark.png" alt="Janko Visuals" class="brand-logo" />
+    </header>
+
+    <!-- 2x2 grid meni -->
+    <nav class="grid-menu" aria-label="Glavna navigacija">
+      <!-- PORTFOLIO -->
+      <a class="menu-card" href="portfolio.html" aria-label="Otvori Portfolio">
+        <div class="menu-card-hoverlayer"></div>
+        <svg class="icon" data-bounce viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none" />
+          <line x1="3" y1="9"  x2="21" y2="9"  stroke="currentColor" stroke-width="2" />
+          <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" />
+          <line x1="8" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" />
+        </svg>
+        <div class="menu-label">Portfolio</div>
+      </a>
+
+      <!-- O MENI -->
+      <a class="menu-card" href="o-meni.html" aria-label="Otvori stranicu O meni">
+        <div class="menu-card-hoverlayer"></div>
+        <svg class="icon" data-bounce viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" fill="none" />
+          <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+        </svg>
+        <div class="menu-label">O meni</div>
+      </a>
+
+      <!-- KONTAKT -->
+      <a class="menu-card" href="kontakt.html" aria-label="Otvori Kontakt">
+        <div class="menu-card-hoverlayer"></div>
+        <svg class="icon" data-bounce viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none" />
+          <polyline points="3,7 12,13 21,7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="menu-label">Kontakt</div>
+      </a>
+
+      <!-- BESPLATNI RESURSI -->
+      <a class="menu-card" href="resursi.html" aria-label="Otvori Besplatne resurse">
+        <div class="menu-card-hoverlayer"></div>
+        <svg class="icon" data-bounce viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round" />
+        </svg>
+        <div class="menu-label">Besplatni resursi</div>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Share dugme + toast -->
+  <button id="shareBtn" type="button" aria-label="Podeli sajt">Podeli sajt</button>
+  <div id="shareToast" role="status" aria-live="polite">Link kopiran</div>
+
+  <script>
+    (function () {
+      const shareBtn = document.getElementById('shareBtn');
+      const toast = document.getElementById('shareToast');
+      const url = 'https://jankovisuals.vercel.app';
+
+      function showToast() {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1600);
+      }
+
+      shareBtn.addEventListener('click', async () => {
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: 'Janko Visuals', text: 'Pogledaj moj portfolio', url });
+          } else {
+            await navigator.clipboard.writeText(url);
+            showToast();
+          }
+        } catch {
+          // fallback na kopiranje ako share odbijen
+          try { await navigator.clipboard.writeText(url); showToast(); } catch {}
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
