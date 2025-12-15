@@ -13,7 +13,7 @@
       --accent-soft:rgba(168,85,247,0.35);
     }
     *{box-sizing:border-box;}
-    html,body{height=100%;height:100%;}
+    html,body{height:100%;}
     body{
       margin:0;
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -22,33 +22,32 @@
       overflow-x:hidden;
       position:relative;
     }
- 
-   body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  /* jedan centralni glow + blagi tonovi sa strane */
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(168,85,247,0.9) 0%,
-      rgba(168,85,247,0.3) 40%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 15% 120%,
-      rgba(40,0,100,0.7) 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      circle at 85% 120%,
-      rgba(50,0,120,0.6) 0%,
-      transparent 65%
-    ),
-    linear-gradient(180deg, #050013, #02000a);
-  background-attachment:fixed;
-}
+    /* fiksna ljubičasta pozadina, glow iz centra */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      background:
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(168,85,247,0.9) 0%,
+          rgba(168,85,247,0.3) 40%,
+          transparent 70%
+        ),
+        radial-gradient(
+          circle at 15% 120%,
+          rgba(40,0,100,0.7) 0%,
+          transparent 65%
+        ),
+        radial-gradient(
+          circle at 85% 120%,
+          rgba(50,0,120,0.6) 0%,
+          transparent 65%
+        ),
+        linear-gradient(180deg, #050013, #02000a);
+      background-attachment:fixed;
+    }
 
     main.page{
       min-height:100vh;
@@ -111,7 +110,7 @@
       margin-top:6px;
     }
 
-    /* Pinteres layout – 2 kolone uvek */
+    /* Pinterest layout – uvek 2 kolone */
     .grid{
       margin-top:10px;
       display:grid;
@@ -149,21 +148,7 @@
       transform:translateY(18%);
     }
 
-    .pill-label{
-      position:absolute;
-      left:10px;
-      bottom:10px;
-      padding:4px 10px;
-      border-radius:999px;
-      background:rgba(0,0,0,0.76);
-      border:1px solid rgba(255,255,255,0.08);
-      font-size:.7rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      color:var(--muted);
-      backdrop-filter:blur(6px);
-      pointer-events:none;
-    }
+    /* .pill-label ostaje u CSS-u ali ga ne koristimo više */
 
     .bottom-nav-wrap{
       width:100%;
@@ -202,13 +187,28 @@
       box-shadow:0 6px 20px rgba(0,0,0,0.9);
     }
 
-    /* LOADING */
+    /* LOADING – isti glow kao pozadina */
     .loading{
       position:fixed;
       inset:0;
       background:
-        radial-gradient(900px 600px at 50% 50%, rgba(168,85,247,0.55) 0%, transparent 60%),
-        rgba(3,0,12,0.96);
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(168,85,247,0.9) 0%,
+          rgba(168,85,247,0.3) 40%,
+          transparent 70%
+        ),
+        radial-gradient(
+          circle at 15% 120%,
+          rgba(40,0,100,0.7) 0%,
+          transparent 65%
+        ),
+        radial-gradient(
+          circle at 85% 120%,
+          rgba(50,0,120,0.6) 0%,
+          transparent 65%
+        ),
+        linear-gradient(180deg, #050013, #02000a);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -387,12 +387,14 @@
 
     const loading = document.getElementById("loading");
 
+    // Interno koristimo nazive fajlova kao ključeve – ali nigde ih ne prikazujemo u UI
     const VIDEO_DESCRIPTIONS = {
       "1.mp4": "Ovde upiši kratku priču i misiju projekta 1.mp4.",
       "2.mp4": "Ovde ide opis za 2.mp4 – klijent, cilj i tvoj pristup.",
       "3.mp4": "Ovde ide opis za 3.mp4.",
       "4.mp4": "Ovde ide opis za 4.mp4.",
       "5.mp4": "Ovde ide opis za 5.mp4."
+      // dodaj dalje: "6.mp4": "...", itd.
     };
 
     function hideLoading(){
@@ -401,8 +403,9 @@
     }
 
     function openOverlay(fileName, src){
-      const baseTitle = fileName.replace(".mp4","").toUpperCase();
-      overlayTitle.textContent = "Reel " + baseTitle;
+      // NEMA prikaza imena fajla – naslov možemo ostaviti prazan ili generički
+      overlayTitle.textContent = "Reel projekat";
+
       overlayDesc.textContent =
         VIDEO_DESCRIPTIONS[fileName] ||
         "Opis za ovaj projekat još uvek nije dodat.";
@@ -460,12 +463,8 @@
         try{ video.play().catch(()=>{}); }catch(e){}
       }, { once:true });
 
-      const pill = document.createElement("span");
-      pill.className = "pill-label";
-      pill.textContent = fileName;
-
+      // NEMA pill-label sa imenom fajla
       tile.appendChild(video);
-      tile.appendChild(pill);
 
       tile.addEventListener("click", () => {
         openOverlay(fileName, src);
