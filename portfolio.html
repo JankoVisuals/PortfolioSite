@@ -18,11 +18,11 @@
       margin:0;
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--fg);
-      background:#02000a;
+      background:#000;          /* isto kao na indexu */
       overflow-x:hidden;
       position:relative;
     }
-    /* fiksna ljubičasta pozadina, glow iz centra */
+    /* fiksna ljubičasta pozadina – centralni glow kao na indexu */
     body::before{
       content:"";
       position:fixed;
@@ -30,22 +30,10 @@
       z-index:-1;
       background:
         radial-gradient(
-          circle at 50% 50%,
-          rgba(168,85,247,0.9) 0%,
-          rgba(168,85,247,0.3) 40%,
-          transparent 70%
-        ),
-        radial-gradient(
-          circle at 15% 120%,
-          rgba(40,0,100,0.7) 0%,
-          transparent 65%
-        ),
-        radial-gradient(
-          circle at 85% 120%,
-          rgba(50,0,120,0.6) 0%,
-          transparent 65%
-        ),
-        linear-gradient(180deg, #050013, #02000a);
+          circle at 50% 45%,
+          rgba(147,51,234,.18),
+          rgba(0,0,0,0) 55%
+        );
       background-attachment:fixed;
     }
 
@@ -105,8 +93,8 @@
       font-weight:700;
       letter-spacing:.16em;
       text-transform:uppercase;
-      color:#ffffff;          /* bela boja */
-      text-align:center;      /* centrirano */
+      color:#ffffff;
+      text-align:center;
       margin-top:6px;
     }
 
@@ -148,8 +136,6 @@
       transform:translateY(18%);
     }
 
-    /* .pill-label ostaje u CSS-u ali ga ne koristimo više */
-
     .bottom-nav-wrap{
       width:100%;
       display:flex;
@@ -187,28 +173,16 @@
       box-shadow:0 6px 20px rgba(0,0,0,0.9);
     }
 
-    /* LOADING – isti glow kao pozadina */
+    /* LOADING – isti glow kao background, bez plavog */
     .loading{
       position:fixed;
       inset:0;
       background:
         radial-gradient(
-          circle at 50% 50%,
-          rgba(168,85,247,0.9) 0%,
-          rgba(168,85,247,0.3) 40%,
-          transparent 70%
-        ),
-        radial-gradient(
-          circle at 15% 120%,
-          rgba(40,0,100,0.7) 0%,
-          transparent 65%
-        ),
-        radial-gradient(
-          circle at 85% 120%,
-          rgba(50,0,120,0.6) 0%,
-          transparent 65%
-        ),
-        linear-gradient(180deg, #050013, #02000a);
+          circle at 50% 45%,
+          rgba(147,51,234,.18),
+          rgba(0,0,0,0) 55%
+        );
       display:flex;
       align-items:center;
       justify-content:center;
@@ -375,7 +349,7 @@
 
     const VIDEO_BASE =
       "https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/";
-    const PROBE_MAX = 50;
+    const PROBE_MAX = 20;  // max 20 videa, brže učitavanje
 
     const grid = document.getElementById("reelGrid");
 
@@ -387,14 +361,28 @@
 
     const loading = document.getElementById("loading");
 
-    // Interno koristimo nazive fajlova kao ključeve – ali nigde ih ne prikazujemo u UI
+    // Opise menjaš ovde:
     const VIDEO_DESCRIPTIONS = {
       "1.mp4": "Ovde upiši kratku priču i misiju projekta 1.mp4.",
       "2.mp4": "Ovde ide opis za 2.mp4 – klijent, cilj i tvoj pristup.",
       "3.mp4": "Ovde ide opis za 3.mp4.",
       "4.mp4": "Ovde ide opis za 4.mp4.",
-      "5.mp4": "Ovde ide opis za 5.mp4."
-      // dodaj dalje: "6.mp4": "...", itd.
+      "5.mp4": "Ovde ide opis za 5.mp4.",
+      "6.mp4": "Opis za 6.mp4.",
+      "7.mp4": "Opis za 7.mp4.",
+      "8.mp4": "Opis za 8.mp4.",
+      "9.mp4": "Opis za 9.mp4.",
+      "10.mp4": "Opis za 10.mp4.",
+      "11.mp4": "Opis za 11.mp4.",
+      "12.mp4": "Opis za 12.mp4.",
+      "13.mp4": "Opis za 13.mp4.",
+      "14.mp4": "Opis za 14.mp4.",
+      "15.mp4": "Opis za 15.mp4.",
+      "16.mp4": "Opis za 16.mp4.",
+      "17.mp4": "Opis za 17.mp4.",
+      "18.mp4": "Opis za 18.mp4.",
+      "19.mp4": "Opis za 19.mp4.",
+      "20.mp4": "Opis za 20.mp4."
     };
 
     function hideLoading(){
@@ -403,7 +391,7 @@
     }
 
     function openOverlay(fileName, src){
-      // NEMA prikaza imena fajla – naslov možemo ostaviti prazan ili generički
+      // Ne prikazujemo ime fajla
       overlayTitle.textContent = "Reel projekat";
 
       overlayDesc.textContent =
@@ -463,7 +451,6 @@
         try{ video.play().catch(()=>{}); }catch(e){}
       }, { once:true });
 
-      // NEMA pill-label sa imenom fajla
       tile.appendChild(video);
 
       tile.addEventListener("click", () => {
