@@ -13,7 +13,7 @@
       --accent-soft:rgba(168,85,247,0.35);
     }
     *{box-sizing:border-box;}
-    html,body{height:100%;}
+    html,body{height=100%;height:100%;}
     body{
       margin:0;
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -22,17 +22,18 @@
       overflow-x:hidden;
       position:relative;
     }
-    /* fiksna ljubičasta pozadina sa glow-om u sredini (ne pomera se na scroll) */
+    /* fiksna ljubičasta pozadina, glow iz SREDINE kao na index.html */
     body::before{
       content:"";
       position:fixed;
       inset:0;
       z-index:-1;
       background:
-        radial-gradient(1100px 800px at 50% -10%, rgba(168,85,247,0.9) 0%, transparent 60%),
-        radial-gradient(900px 700px at 85% 120%, rgba(68,0,180,0.6) 0%, transparent 60%),
-        radial-gradient(900px 700px at 15% 120%, rgba(50,0,120,0.7) 0%, transparent 65%),
+        radial-gradient(1200px 900px at 50% 50%, rgba(168,85,247,0.9) 0%, transparent 60%),
+        radial-gradient(900px 700px at 15% 120%, rgba(40,0,100,0.7) 0%, transparent 65%),
+        radial-gradient(900px 700px at 85% 120%, rgba(50,0,120,0.6) 0%, transparent 65%),
         linear-gradient(180deg, #050013, #02000a);
+      background-attachment:fixed;
     }
 
     main.page{
@@ -87,17 +88,18 @@
     }
 
     .section-header{
-      font-size:1.1rem;
-      font-weight:600;
-      letter-spacing:.12em;
+      font-size:1.2rem;
+      font-weight:700;
+      letter-spacing:.16em;
       text-transform:uppercase;
-      color:var(--muted);
-      margin-top:2px;
+      color:#ffffff;          /* bela boja */
+      text-align:center;      /* centrirano */
+      margin-top:6px;
     }
 
-    /* Pinteres lajaut – 2 kolone uvek */
+    /* Pinteres layout – 2 kolone uvek */
     .grid{
-      margin-top:6px;
+      margin-top:10px;
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:16px;
@@ -126,11 +128,9 @@
       aspect-ratio:9/16;
       border-radius:22px;
     }
-    /* nema zoom animacije, samo minimalni svetlosni efekat */
     .tile:hover{
       filter:brightness(1.03);
     }
-    /* svaki drugi malo spušten – Pinterest efekat */
     .tile--offset{
       transform:translateY(18%);
     }
@@ -151,7 +151,6 @@
       pointer-events:none;
     }
 
-    /* bottom nav */
     .bottom-nav-wrap{
       width:100%;
       display:flex;
@@ -189,12 +188,12 @@
       box-shadow:0 6px 20px rgba(0,0,0,0.9);
     }
 
-    /* LOADING OVERLAY */
+    /* LOADING */
     .loading{
       position:fixed;
       inset:0;
       background:
-        radial-gradient(900px 600px at 50% -10%, rgba(168,85,247,0.55) 0%, transparent 60%),
+        radial-gradient(900px 600px at 50% 50%, rgba(168,85,247,0.55) 0%, transparent 60%),
         rgba(3,0,12,0.96);
       display:flex;
       align-items:center;
@@ -232,7 +231,7 @@
       position:fixed;
       inset:0;
       background:
-        radial-gradient(1100px 800px at 50% -10%, var(--accent-soft) 0%, transparent 60%),
+        radial-gradient(1100px 800px at 50% 50%, var(--accent-soft) 0%, transparent 60%),
         rgba(0,0,0,0.97);
       display:none;
       align-items:center;
@@ -243,7 +242,7 @@
       display:flex;
     }
     .overlay-inner{
-      width:min(100vw, 540px); /* 9:16 feel */
+      width:min(100vw, 540px);
       max-height:100vh;
       padding:18px 12px 22px;
       display:flex;
@@ -263,7 +262,7 @@
       max-height:calc(100vh - 180px);
       display:block;
       border-radius:26px;
-      object-fit:cover; /* sada video ispunjava player, nema širih ivica od videa */
+      object-fit:cover;
       background:#000;
     }
     .overlay-close{
@@ -374,14 +373,12 @@
 
     const loading = document.getElementById("loading");
 
-    // Ovde menjaš opise:
     const VIDEO_DESCRIPTIONS = {
       "1.mp4": "Ovde upiši kratku priču i misiju projekta 1.mp4.",
       "2.mp4": "Ovde ide opis za 2.mp4 – klijent, cilj i tvoj pristup.",
       "3.mp4": "Ovde ide opis za 3.mp4.",
       "4.mp4": "Ovde ide opis za 4.mp4.",
-      "5.mp4": "Ovde ide opis za 5.mp4.",
-      // dodaj po potrebi: "6.mp4": "…", itd.
+      "5.mp4": "Ovde ide opis za 5.mp4."
     };
 
     function hideLoading(){
@@ -415,21 +412,16 @@
       overlayVideo.removeAttribute("src");
     }
 
-    if (overlayClose){
-      overlayClose.addEventListener("click", closeOverlay);
-    }
-    if (overlay){
-      overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) closeOverlay();
-      });
-    }
+    overlayClose?.addEventListener("click", closeOverlay);
+    overlay?.addEventListener("click", (e) => {
+      if (e.target === overlay) closeOverlay();
+    });
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && overlay.classList.contains("is-open")){
         closeOverlay();
       }
     });
     overlayVideo?.addEventListener("ended", () => {
-      // po završetku samo pauziramo, ne zatvaramo overlay
       try{ overlayVideo.pause(); }catch(e){}
     });
 
@@ -450,7 +442,6 @@
       video.preload = "metadata";
       video.src = src;
 
-      // auto-play bez zvuka
       video.addEventListener("canplay", () => {
         try{ video.play().catch(()=>{}); }catch(e){}
       }, { once:true });
