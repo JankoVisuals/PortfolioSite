@@ -22,19 +22,22 @@
       overflow-x:hidden;
       position:relative;
     }
-    /* fiksna ljubičasta pozadina, glow iz SREDINE kao na index.html */
+ 
     body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      background:
-        radial-gradient(1200px 900px at 50% 50%, rgba(168,85,247,0.9) 0%, transparent 60%),
-        radial-gradient(900px 700px at 15% 120%, rgba(40,0,100,0.7) 0%, transparent 65%),
-        radial-gradient(900px 700px at 85% 120%, rgba(50,0,120,0.6) 0%, transparent 65%),
-        linear-gradient(180deg, #050013, #02000a);
-      background-attachment:fixed;
-    }
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    /* glavni glow: krug iz centra, radius ≈ ivica + 33% */
+    radial-gradient(circle 133% at 50% 50%, rgba(168,85,247,0.9) 0%, transparent 60%),
+    /* blagi bočni tonovi, ostaju slični */
+    radial-gradient(circle 110% at 15% 120%, rgba(40,0,100,0.7) 0%, transparent 65%),
+    radial-gradient(circle 110% at 85% 120%, rgba(50,0,120,0.6) 0%, transparent 65%),
+    linear-gradient(180deg, #050013, #02000a);
+  background-attachment:fixed;
+}
+
 
     main.page{
       min-height:100vh;
