@@ -153,6 +153,101 @@
       max-width:420px;
       display:flex;
       justify-content:center;
+    }
+
+    /* top back button */
+    .top-nav{
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+    }
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(147,51,234,0.6);
+      background:rgba(7,4,28,0.85);
+      color:#fff;
+      font-size:.85rem;
+      text-decoration:none;
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.7);
+      transition:background .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+    .back-btn span.icon{
+      font-size:1.1rem;
+      transform:translateY(1px);
+    }
+    .back-btn:hover{
+      background:rgba(20,8,60,0.95);
+      box-shadow:0 14px 40px rgba(0,0,0,0.8);
+    }
+    .back-btn:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 20px rgba(0,0,0,0.9);
+    }
+
+    .section-header{
+      font-size:1.2rem;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#ffffff;
+      text-align:center;
+      margin-top:6px;
+    }
+
+    /* Pinterest layout – uvek 2 kolone */
+    .grid{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    @media (min-width:1200px){
+      main.page{padding-top:32px;}
+      .grid{gap:20px;}
+    }
+
+    .tile{
+      position:relative;
+      border-radius:22px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 18px 50px rgba(0,0,0,0.9);
+      cursor:pointer;
+      border:none;
+      padding:0;
+    }
+    .tile video{
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
+      aspect-ratio:9/16;
+      border-radius:22px;
+    }
+    .tile:hover{
+      filter:brightness(1.03);
+    }
+    .tile--offset{
+      transform:translateY(18%);
+    }
+
+    .bottom-nav-wrap{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:10px;
+    }
+    .bottom-nav{
+      width:100%;
+      max-width:420px;
+      display:flex;
+      justify-content:center;
       gap:14px;
       flex-wrap:wrap;
     }
@@ -324,6 +419,8 @@
 
     <div class="bottom-nav-wrap is-hidden" id="bottomNavWrap">
       <nav class="bottom-nav" aria-hidden="true">
+    <div class="bottom-nav-wrap">
+      <nav class="bottom-nav">
         <a class="btn-home" href="/o-meni.html">O meni</a>
         <a class="btn-home" href="/kontakt.html">Kontakt</a>
       </nav>
@@ -354,6 +451,10 @@
     "use strict";
 
     const PROBE_MAX = 20; // max 20 videa (1.mp4 ... 20.mp4)
+    const VIDEO_BASE =
+      "https://mlvbvuwdxasdbguczsmb.supabase.co/storage/v1/object/public/videos/";
+    const PROBE_MAX = 20;  // max 20 videa, brže učitavanje
+
     const grid = document.getElementById("reelGrid");
 
     const overlay = document.getElementById("overlay");
@@ -402,6 +503,15 @@
 
     function openOverlay(fileName, src){
       overlayTitle.textContent = "Reel projekat";
+    function hideLoading(){
+      if (!loading) return;
+      loading.classList.add("is-hidden");
+    }
+
+    function openOverlay(fileName, src){
+      // Ne prikazujemo ime fajla
+      overlayTitle.textContent = "Reel projekat";
+
       overlayDesc.textContent =
         VIDEO_DESCRIPTIONS[fileName] ||
         "Opis za ovaj projekat još uvek nije dodat.";
@@ -496,6 +606,63 @@
       if (!r.ok) throw new Error(await r.text());
       const data = await r.json();
       return Array.isArray(data?.items) ? data.items : [];
+    overlayVideo?.addEventListener("ended", () => {
+      try{ overlayVideo.pause(); }catch(e){}
+    });
+
+    function createTile(fileName, src, index){
+      const tile = document.createElement("button");
+      tile.className = "tile";
+      tile.type = "button";
+      if (index % 2 === 1){
+        tile.classList.add("tile--offset");
+      }
+
+      const video = document.createElement("video");
+      video.playsInline = true;
+      video.setAttribute("playsinline","");
+      video.muted = true;
+      video.setAttribute("muted","");
+      video.loop = true;
+      video.preload = "metadata";
+      video.src = src;
+
+      video.addEventListener("canplay", () => {
+        try{ video.play().catch(()=>{}); }catch(e){}
+      }, { once:true });
+
+      tile.appendChild(video);
+
+      tile.addEventListener("click", () => {
+        openOverlay(fileName, src);
+      });
+
+      return tile;
+    }
+
+    async function probeOne(i){
+      const fileName = i + ".mp4";
+      const src = VIDEO_BASE + fileName;
+      return new Promise(resolve => {
+        const v = document.createElement("video");
+        v.preload = "metadata";
+        v.muted = true;
+        v.playsInline = true;
+        v.crossOrigin = "anonymous";
+
+        const ok = () => { cleanup(); resolve({ ok:true, fileName, src }); };
+        const bad = () => { cleanup(); resolve({ ok:false, fileName, src }); };
+
+        function cleanup(){
+          v.removeEventListener("loadedmetadata", ok);
+          v.removeEventListener("error", bad);
+        }
+
+        v.addEventListener("loadedmetadata", ok, { once:true });
+        v.addEventListener("error", bad, { once:true });
+
+        v.src = src + "#t=0.1";
+      });
     }
 
     (async function init(){
@@ -507,6 +674,15 @@
         if (!items.length){
           hideLoading();
           setBottomNavVisible(true);
+        const probes = [];
+        for (let i=1; i<=PROBE_MAX; i++){
+          probes.push(probeOne(i));
+        }
+        const results = await Promise.all(probes);
+        const found = results.filter(r => r.ok);
+
+        if (!found.length){
+          hideLoading();
           const p = document.createElement("p");
           p.textContent = "Nema dostupnih videa u ovom trenutku.";
           p.style.color = "var(--muted)";
@@ -545,6 +721,18 @@
   })();
 </script>
 
+
+        found.forEach((item, idx) => {
+          const tile = createTile(item.fileName, item.src, idx);
+          grid.appendChild(tile);
+        });
+
+        hideLoading();
+      } catch (e){
+        console.error(e);
+        hideLoading();
+      }
+    })();
 
 </body>
 </html>
