@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio • Reels</title>
+  <style>
+    :root{
+      --bg-deep:#050013;
+      --fg:#f5f3ff;
+      --muted:#a6a0c2;
+      --accent:#A855F7;
+      --accent-soft:rgba(168,85,247,0.35);
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--fg);
+      background:#000;          /* isto kao na indexu */
+      overflow-x:hidden;
+      position:relative;
+    }
+    /* fiksna ljubičasta pozadina – centralni glow kao na indexu */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(147,51,234,.18),
+          rgba(0,0,0,0) 55%
+        );
+      background-attachment:fixed;
+    }
+
+    main.page{
+      min-height:100vh;
+      padding:24px 12px 32px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:24px;
+    }
+
+    .page-inner{
+      width:100%;
+      max-width:1100px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    /* top back button */
+    .top-nav{
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+    }
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(147,51,234,0.6);
+      background:rgba(7,4,28,0.85);
+      color:#fff;
+      font-size:.85rem;
+      text-decoration:none;
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.7);
+      transition:background .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+    .back-btn span.icon{
+      font-size:1.1rem;
+      transform:translateY(1px);
+    }
+    .back-btn:hover{
+      background:rgba(20,8,60,0.95);
+      box-shadow:0 14px 40px rgba(0,0,0,0.8);
+    }
+    .back-btn:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 20px rgba(0,0,0,0.9);
+    }
+
+    .section-header{
+      font-size:1.2rem;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#ffffff;
+      text-align:center;
+      margin-top:6px;
+    }
+
+    /* Pinterest layout – uvek 2 kolone */
+    .grid{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    @media (min-width:1200px){
+      main.page{padding-top:32px;}
+      .grid{gap:20px;}
+    }
+
+    .tile{
+      position:relative;
+      border-radius:22px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 18px 50px rgba(0,0,0,0.9);
+      cursor:pointer;
+      border:none;
+      padding:0;
+    }
+    .tile video{
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
+      aspect-ratio:9/16;
+      border-radius:22px;
+    }
+    .tile:hover{
+      filter:brightness(1.03);
+    }
+    .tile--offset{
+      transform:translateY(18%);
+    }
+
+    .bottom-nav-wrap{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:10px;
+    }
+    .bottom-nav-wrap.is-hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:opacity .25s ease, visibility .25s ease;
+    }
+    .bottom-nav{
+      width:100%;
+      max-width:420px;
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .btn-home{
+      flex:1 1 0;
+      min-width:140px;
+      padding:12px 18px;
+      text-align:center;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(147,51,234,.45);
+      backdrop-filter:blur(12px);
+      font-weight:700;
+      color:#fff;
+      text-decoration:none;
+      transition:background .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+    .btn-home:hover{
+      background:rgba(255,255,255,0.12);
+      box-shadow:0 10px 30px rgba(0,0,0,0.7);
+    }
+    .btn-home:active{
+      transform:scale(.96);
+      box-shadow:0 6px 20px rgba(0,0,0,0.9);
+    }
+
+    /* LOADING – isti glow kao background, bez plavog */
+    .loading{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(147,51,234,.18),
+          rgba(0,0,0,0) 55%
+        );
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9000;
+      transition:opacity .3s ease, visibility .3s ease;
+    }
+    .loading.is-hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .loading-inner{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      color:#fff;
+      font-size:.9rem;
+    }
+    .spinner{
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      border:3px solid rgba(255,255,255,0.18);
+      border-top-color:var(--accent);
+      animation:spin 0.9s linear infinite;
+    }
+    @keyframes spin{
+      to{transform:rotate(360deg);}
+    }
+
+    /* FULLSCREEN OVERLAY */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(1100px 800px at 50% 50%, var(--accent-soft) 0%, transparent 60%),
+        rgba(0,0,0,0.97);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    .overlay.is-open{
+      display:flex;
+    }
+    .overlay-inner{
+      width:min(100vw, 540px);
+      max-height:100vh;
+      padding:18px 12px 22px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .overlay-video-wrap{
+      position:relative;
+      border-radius:26px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 22px 70px rgba(0,0,0,0.95);
+    }
+    .overlay video{
+      width:100%;
+      height:auto;
+      max-height:calc(100vh - 180px);
+      display:block;
+      border-radius:26px;
+      object-fit:cover;
+      background:#000;
+    }
+    .overlay-close{
+      position:absolute;
+      top:10px;
+      right:12px;
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      border:none;
+      background:rgba(5,2,20,0.96);
+      color:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size:20px;
+      line-height:1;
+      box-shadow:0 0 0 1px rgba(168,85,247,0.8);
+      z-index:10;
+    }
+    .overlay-meta{
+      padding:0 4px;
+    }
+    .overlay-title{
+      font-size:.98rem;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .overlay-desc{
+      font-size:.9rem;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    @media (max-width:480px){
+      .overlay-inner{
+        width:100%;
+        padding-inline:10px;
+      }
+      .overlay-desc{font-size:.88rem;}
+    }
+  </style>
+</head>
+<body>
+  <!-- LOADING SCREEN -->
+  <div class="loading" id="loading">
+    <div class="loading-inner">
+      <div class="spinner"></div>
+      <div>Učitavam reels…</div>
+    </div>
+  </div>
+
+  <main class="page">
+    <div class="page-inner">
+      <header class="top-nav">
+        <a href="/index.html" class="back-btn">
+          <span class="icon">←</span>
+          <span>Početna</span>
+        </a>
+      </header>
+
+      <div class="section-header">Reels portfolio</div>
+
+      <section class="grid" id="reelGrid" aria-live="polite"></section>
+    </div>
+
+    <div class="bottom-nav-wrap is-hidden" id="bottomNavWrap">
+      <nav class="bottom-nav" aria-hidden="true">
+        <a class="btn-home" href="/o-meni.html">O meni</a>
+        <a class="btn-home" href="/kontakt.html">Kontakt</a>
+      </nav>
+    </div>
+  </main>
+
+  <!-- FULLSCREEN OVERLAY -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="overlay-inner">
+      <div class="overlay-video-wrap">
+        <button class="overlay-close" id="overlayClose" aria-label="Zatvori video">×</button>
+        <video id="overlayVideo"
+               playsinline
+               controls
+               controlsList="nodownload noplaybackrate noremoteplayback"
+               disablepictureinpicture
+               x-webkit-airplay="deny"></video>
+      </div>
+      <div class="overlay-meta">
+        <div class="overlay-title" id="overlayTitle"></div>
+        <div class="overlay-desc" id="overlayDesc"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    "use strict";
+
+    const PROBE_MAX = 20; // max 20 videa (1.mp4 ... 20.mp4)
+    const grid = document.getElementById("reelGrid");
+
+    const overlay = document.getElementById("overlay");
+    const overlayVideo = document.getElementById("overlayVideo");
+    const overlayClose = document.getElementById("overlayClose");
+    const overlayTitle = document.getElementById("overlayTitle");
+    const overlayDesc = document.getElementById("overlayDesc");
+
+    const loading = document.getElementById("loading");
+    const bottomNavWrap = document.getElementById("bottomNavWrap");
+
+    // Opise menjaš ovde:
+    const VIDEO_DESCRIPTIONS = {
+      "1.mp4": "Kada je startup aplikacije u pitanju, marketing je mač sa dve oštrice. Možete se probuditi sa nula novih preuzimanja i lošim recenzijama od juče na AppStore-u, ali isto tako možete da izgubite sluh od količine notifikacija za svakog novog korisnika. Kada je aplikacija ZaradiUsput lansirana, znao sam da je bilo vrlo važno da se njena poruka jasno i glasno iskomunicira. Putuješ negde? ZaradiUsput. Šalješ paket? ZaradiUsput.",
+      "2.mp4": "Tattoo Bar je bogat ekskluzivnim koktelima, dobrom atmosferom i najkvalitetnijim tattoo majstorima u Srbiji. Ovaj video spaja sve ove elemente i uzbuđuje nove ljude da dođu na dobar provod.",
+      "3.mp4": "Kada je snimanje u studiju u pitanju, to otprilike ovako izgleda. Sa Stefanom radim već tri godine. Svakim našim snimanjem sam se poboljšavao dok nisam našao savršenu postavku kadra, rasvete i ozvučenja. (Stefanov edit)",
+      "4.mp4": "SANCREA nameštaj u vinariji Bijelica postavlja pitanje da li je prijatnije sedeti unutra ili šetati kroz vinograde koji okružuju ovaj objekat.",
+      "5.mp4": "Kao mali sam se oduvek pitao kako ovakve reklame nastaju, danas ih pravim sa uživanjem.",
+      "6.mp4": "Restoran Kora",
+      "7.mp4": "Soha Bar u Novom Sadu",
+      "8.mp4": "R Pub u Novom Sadu",
+      "9.mp4": "Serbia Business Run - Start trke",
+      "10.mp4": "Tajni serum grčkih bogova za najbolji teambuilding koji će tvoja firma ikada imati. Osim ako ne dođeš i sledeće godine.",
+      "11.mp4": "Opis za 11.mp4.",
+      "12.mp4": "Opis za 12.mp4.",
+      "13.mp4": "Opis za 13.mp4.",
+      "14.mp4": "Opis za 14.mp4.",
+      "15.mp4": "Opis za 15.mp4.",
+      "16.mp4": "Opis za 16.mp4.",
+      "17.mp4": "Opis za 17.mp4.",
+      "18.mp4": "Opis za 18.mp4.",
+      "19.mp4": "Opis za 19.mp4.",
+      "20.mp4": "Opis za 20.mp4."
+    };
+
+    function setBottomNavVisible(visible){
+      if (!bottomNavWrap) return;
+      bottomNavWrap.classList.toggle("is-hidden", !visible);
+      const nav = bottomNavWrap.querySelector("nav");
+      if (nav) nav.setAttribute("aria-hidden", String(!visible));
+    }
+
+    function hideLoading(){
+      if (loading) loading.classList.add("is-hidden");
+    }
+
+    function openOverlay(fileName, src){
+      overlayTitle.textContent = "Reel projekat";
+      overlayDesc.textContent =
+        VIDEO_DESCRIPTIONS[fileName] ||
+        "Opis za ovaj projekat još uvek nije dodat.";
+
+      overlayVideo.src = src;
+      overlayVideo.currentTime = 0;
+      overlayVideo.muted = false;
+
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+
+      try{ overlayVideo.play().catch(()=>{}); }catch(e){}
+    }
+
+    function closeOverlay(){
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+      try{ overlayVideo.pause(); }catch(e){}
+      overlayVideo.removeAttribute("src");
+    }
+
+    overlayClose?.addEventListener("click", closeOverlay);
+    overlay?.addEventListener("click", (e) => {
+      if (e.target === overlay) closeOverlay();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("is-open")){
+        closeOverlay();
+      }
+    });
+
+    function createTile(fileName, src, index){
+      const tile = document.createElement("button");
+      tile.className = "tile";
+      tile.type = "button";
+      if (index % 2 === 1) tile.classList.add("tile--offset");
+
+      const video = document.createElement("video");
+      video.playsInline = true;
+      video.setAttribute("playsinline","");
+      video.setAttribute("webkit-playsinline","");
+
+      video.muted = true;
+      video.setAttribute("muted","");
+      video.loop = true;
+      video.autoplay = true;
+      video.setAttribute("autoplay","");
+
+      video.preload = "metadata";
+      video.src = src;
+
+      video.addEventListener("canplay", () => {
+        try{ video.play().catch(()=>{}); }catch(e){}
+      }, { once:true });
+
+      tile.appendChild(video);
+      tile.addEventListener("click", () => openOverlay(fileName, src));
+
+      return { tile, video };
+    }
+
+    function waitForVideoReady(video, timeoutMs){
+      return new Promise(resolve => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          cleanup();
+          resolve();
+        };
+        const cleanup = () => {
+          video.removeEventListener("loadeddata", finish);
+          video.removeEventListener("canplay", finish);
+          video.removeEventListener("error", finish);
+          if (t) clearTimeout(t);
+        };
+
+        if (video.readyState >= 2) return finish();
+
+        video.addEventListener("loadeddata", finish, { once:true });
+        video.addEventListener("canplay", finish, { once:true });
+        video.addEventListener("error", finish, { once:true });
+
+        const t = setTimeout(finish, timeoutMs || 10000);
+      });
+    }
+
+    async function fetchVideoList(){
+      const r = await fetch(`/api/listVideos?max=${PROBE_MAX}`, { cache: "no-store" });
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      return Array.isArray(data?.items) ? data.items : [];
+    }
+
+    (async function init(){
+      try{
+        // Sakrij O meni/Kontakt dok se sve ne učita
+        setBottomNavVisible(false);
+
+        const items = await fetchVideoList();
+        if (!items.length){
+          hideLoading();
+          setBottomNavVisible(true);
+          const p = document.createElement("p");
+          p.textContent = "Nema dostupnih videa u ovom trenutku.";
+          p.style.color = "var(--muted)";
+          p.style.fontSize = ".9rem";
+          grid.appendChild(p);
+          return;
+        }
+
+        const videos = [];
+        items.forEach((item, idx) => {
+          const fileName = item.fileName || "Reel";
+          const src = item.url;
+          const { tile, video } = createTile(fileName, src, idx);
+          grid.appendChild(tile);
+          videos.push(video);
+        });
+
+        // Čekaj da SVI tile videi imaju bar prvi frame/metadata (ili error/timeout)
+        await Promise.all(videos.map(v => waitForVideoReady(v, 12000)));
+
+        hideLoading();
+        setBottomNavVisible(true);
+        } catch (e){
+    console.error(e);
+    hideLoading();
+    setBottomNavVisible(true);
+
+    const p = document.createElement("p");
+    p.textContent = "Došlo je do greške pri učitavanju videa. Proveri Supabase bucket/URL i pokušaj ponovo.";
+    p.style.color = "var(--muted)";
+    p.style.fontSize = ".9rem";
+    grid.appendChild(p);
+  }
+})();
+
+  })();
+</script>
+
+
+</body>
+</html>

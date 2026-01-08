@@ -1,0 +1,212 @@
+/* Base reset */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:#000;color:#fff;font-family:'Satoshi',system-ui,-apple-system,BlinkMacSystemFont,Inter,Roboto,sans-serif;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;padding:24px;overflow:hidden}
+body.no-scroll{overflow:hidden}
+
+/* BG glow — jači + fallback za mobile */
+.bg-glow{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
+.bg-glow-circle{width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:9999px;background:rgba(147,51,234,.35);filter:blur(160px);animation:pulseGlow 4s ease-in-out infinite;z-index:0!important}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(147,51,234,.18),rgba(0,0,0,0) 55%)}
+@keyframes pulseGlow{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+
+/* Home */
+.wrapper{width:100%;max-width:360px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.brand{display:flex;flex-direction:column;align-items:center;text-align:center}
+.brand-title{color:#fff;font-size:1rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;line-height:1.2}
+.brand-sub{color:rgba(255,255,255,.4);font-size:.7rem;font-weight:500;line-height:1.2;margin-top:4px;letter-spacing:.2em;text-transform:uppercase}
+
+/* 2x2 Menu */
+.grid-menu{width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.menu-card{position:relative;aspect-ratio:1/1;border-radius:1rem;background:rgba(255,255,255,.05);border:1px solid rgba(147,51,234,.3);backdrop-filter:blur(12px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;text-decoration:none;overflow:hidden;transition:all .2s ease;
+  opacity:0;transform:translateY(26px) scale(.92);animation:cardEnter .7s cubic-bezier(.3,.8,.3,1.1) forwards}
+.menu-card:nth-child(1){animation-delay:.05s}
+.menu-card:nth-child(2){animation-delay:.14s}
+.menu-card:nth-child(3){animation-delay:.23s}
+.menu-card:nth-child(4){animation-delay:.32s}
+@keyframes cardEnter{0%{opacity:0;transform:translateY(26px) scale(.92)}60%{opacity:1;transform:translateY(-4px) scale(1.05)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.menu-card:active{transform:scale(.97)}
+.menu-card-hoverlayer{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 0% 0%,rgba(147,51,234,.28) 0%,rgba(0,0,0,0) 60%);opacity:0;transition:opacity .2s ease}
+.menu-card:hover .menu-card-hoverlayer{opacity:1}
+.icon{width:28px;height:28px;margin-bottom:10px;color:rgb(168,85,247);fill:currentColor}
+.menu-label{font-size:.9rem;font-weight:500;color:#fff}
+.menu-card:hover .menu-label{color:rgb(216,180,254)}
+
+/* Subpages (common) */
+.page{min-height:100dvh;background:#000;color:#fff;display:flex;flex-direction:column;position:relative;padding:24px;overflow-x:hidden;overflow-y:auto}
+.page-inner{position:relative;z-index:1;display:flex;flex-direction:column;gap:24px;max-width:400px;margin:0 auto}
+.top-bar{display:flex;align-items:center;gap:12px}
+.back-btn{width:40px;height:40px;border-radius:10px;border:1px solid rgba(147,51,234,.4);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:14px;font-weight:500}
+.section-heading{display:flex;flex-direction:column}
+.section-icon{width:32px;height:32px;color:rgb(168,85,247);fill:currentColor}
+.section-title{font-size:1.1rem;font-weight:600;color:#fff;line-height:1.2}
+.section-desc{font-size:.8rem;font-weight:400;line-height:1.4;color:rgba(255,255,255,.6);max-width:320px}
+.content-block{border-radius:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:16px}
+.content-heading{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:8px}
+.content-text{font-size:.9rem;line-height:1.4;color:#fff}
+
+/* Links / form */
+.link-row{display:flex;flex-direction:column;gap:8px}
+.contact-item{display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.05);border:1px solid rgba(147,51,234,.4);border-radius:.8rem;padding:12px 16px;text-decoration:none;color:#fff}
+.contact-label{font-size:.7rem;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.08em;text-transform:uppercase}
+.contact-value{font-size:.9rem;font-weight:500;color:#fff;word-break:break-all}
+.nowrap{white-space:nowrap}
+
+/* Featured 9:16 */
+.feature-wrap{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.feature-wrap::before{content:"";display:block;padding-top:177.78%}
+.feature{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
+
+/* Grid reels 9:16 */
+.video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.reel-card{display:flex;flex-direction:column;gap:8px}
+.reel-wrap{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.reel-wrap::before{content:"";display:block;padding-top:177.78%}
+.reel{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
+.reel-meta{display:flex;flex-direction:column;gap:2px}
+.reel-title{font-size:.9rem;font-weight:600}
+.reel-sub{font-size:.75rem;color:rgba(255,255,255,.6)}
+
+/* Kontrole (grid/feature) */
+.video-controls{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;z-index:10}
+.reel-btn{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:999px;color:#fff;padding:8px 10px;font-size:.8rem;backdrop-filter:blur(6px)}
+.icon-sound::before{content:"🔇"}
+video[data-sound="on"] ~ .video-controls .icon-sound::before{content:"🔊"}
+.icon-full::before{content:"⤢";font-size:.9rem}
+
+/* Fullscreen overlay */
+.fs-overlay{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:999}
+.fs-overlay.active{display:flex}
+.fs-video-wrap{position:relative;width:100%;height:100%}
+#fsVideo{position:absolute;inset:0;margin:auto;width:100%;height:100%;object-fit:contain;background:#000}
+.fs-caption{position:absolute;left:12px;bottom:12px;z-index:100;color:#fff;text-shadow:0 1px 16px rgba(0,0,0,.65)}
+.fs-caption #fsTitle{font-weight:700}
+.fs-caption #fsSub{opacity:.7;font-size:.9rem;margin-top:2px}
+.fs-close{position:absolute;top:14px;right:14px;z-index:120;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.4);color:#fff;border-radius:999px;font-size:1rem;line-height:1;padding:10px 12px}
+
+/* ==== Besplatni resursi: forma ==== */
+.form-card{border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25) inset, 0 10px 25px rgba(0,0,0,.15)}
+.form{display:flex;flex-direction:column;gap:14px}
+.form-row{display:flex;flex-direction:column;gap:8px}
+label{font-size:.8rem;color:rgba(255,255,255,.75);letter-spacing:.03em}
+select,input[type="email"]{width:100%;height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(147,51,234,.45);background:rgba(0,0,0,.35);color:#fff;outline:none}
+select{-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%),linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%);background-position:calc(100% - 18px) 18px,calc(100% - 12px) 18px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+input::placeholder{color:rgba(255,255,255,.45)}
+button.btn{width:100%;height:46px;border-radius:12px;border:1px solid rgba(147,51,234,.6);background:linear-gradient(180deg, rgba(147,51,234,.45), rgba(147,51,234,.25));color:#fff;font-weight:700;letter-spacing:.02em}
+button.btn:active{transform:scale(.98)}
+.status{font-size:.82rem;color:rgba(255,255,255,.7);min-height:1.2em;margin-top:2px}
+.content-heading.kicker{color:rgba(255,255,255,.75);font-weight:700;letter-spacing:.1em}
+
+/* ==== O MENI ==== */
+.page-header{display:flex;align-items:center;gap:12px;padding:14px 20px}
+.page-header h2{font-size:22px;font-weight:800}
+.page-header .subtitle{color:rgba(255,255,255,.65);font-size:14px}
+.back-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid rgba(147,51,234,.35);background:rgba(255,255,255,.04);color:#fff;text-decoration:none}
+.back-btn span{font-size:22px;line-height:1}
+.about-layout{max-width:1200px;margin:0 auto;padding:20px 20px 8px;display:grid;gap:28px;grid-template-columns:1fr;align-items:start}
+.about-media{display:flex;justify-content:center}
+.about-photo{width:100%;max-width:520px;height:auto;display:block;border-radius:16px;box-shadow:0 12px 60px rgba(147,51,234,.18)}
+.about-copy{color:#fff;line-height:1.65;font-size:15.5px}
+.about-copy h3{font-size:21px;font-weight:800;margin-bottom:10px}
+@media (min-width: 1024px){
+  .about-layout{grid-template-columns:38% 1fr;gap:40px;padding-inline:24px}
+  .about-photo{max-width:520px}
+  .about-copy{font-size:16.5px}
+}
+/* Glow ne utiče na O-meni sekciju */
+.about-zfix{position:relative;z-index:4}
+
+/* CTA dugmad ispod teksta */
+.about-buttons {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-cta{padding:10px 18px;border-radius:12px;color:#fff;font-size:.88rem;font-weight:700;text-decoration:none;background:linear-gradient(180deg, rgba(147,51,234,.55), rgba(147,51,234,.28));border:1px solid rgba(147,51,234,.7);box-shadow:0 6px 18px rgba(147,51,234,.25);transition:transform .15s ease, box-shadow .15s ease, background .15s ease}
+.btn-cta:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(147,51,234,.35);background:linear-gradient(180deg, rgba(147,51,234,.65), rgba(147,51,234,.35))}
+.btn-cta.secondary{background:rgba(147,51,234,.12);border-color:rgba(147,51,234,.55)}
+.btn-cta.secondary:hover{background:rgba(147,51,234,.2)}
+
+/* Klijenti (seamless) — jednak razmak i sporiji loop */
+.clients{width:100vw;overflow:hidden;padding:24px 0 34px}
+.clients-track{
+  display:flex;align-items:center;gap:32px; /* jednak i manji razmak */
+  width:max-content;
+  animation:marquee 40s linear infinite; /* sporije */
+}
+.clients-track img{
+  height:38px;object-fit:contain;display:block;filter:brightness(0) invert(1)
+}
+/* skaliranja (i dalje) */
+.clients-track img[alt*="Serbia Business Run"]{transform:scale(1.3)}
+.clients-track img[alt*="Aquarius"]{transform:scale(2)}
+.clients-track img[alt*="Tattoo Bar"]{transform:scale(2)}
+.clients-track img[alt*="Power Zone"]{transform:scale(1.4)}
+/* Kimura duplo veća i B/W */
+.clients-track img[alt*="Kimura"]{filter:grayscale(1) brightness(1.1) contrast(1.15);transform:scale(2)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (max-width:768px){
+  .about-layout{grid-template-columns:1fr;gap:24px;text-align:center}
+  .clients-track img{height:34px}
+}
+
+.btn-home {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 18px;
+  text-align: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(147,51,234,.45);
+  backdrop-filter: blur(12px);
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  transition: .2s ease;
+}
+
+.btn-home:active {
+  transform: scale(.96);
+}
+
+@media (min-width: 768px) {
+  .btn-home { width: auto; }
+}
+
+.clients {
+  overflow:hidden;
+  width:100%;
+}
+
+.clients-track {
+  display:flex;
+  animation: marquee 38s linear infinite;
+  will-change: transform;
+}
+
+.clients-track img {
+  margin-right: 32px;
+}
+/* --- Brand logo + share dugme (naslovna) --- */
+.brand-logo{
+  width:180px; height:auto; display:block;
+  filter: drop-shadow(0 8px 30px rgba(0,0,0,.3));
+  margin-bottom:8px;
+}
+
+.btn.icon-btn{
+  margin-top:10px;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 14px; border-radius:12px;
+  border:1px solid rgba(147,51,234,.6);
+  background:linear-gradient(180deg, rgba(147,51,234,.45), rgba(147,51,234,.25));
+  color:#fff; font-weight:700; letter-spacing:.02em
+}
+.btn.icon-btn:active{ transform:scale(.98) }
+.btn.icon-btn .btn-ico{ font-size:16px; line-height:1 }
+#share-site[data-tip]:after{
+  content: attr(data-tip);
+  margin-left:8px; font-weight:600; opacity:.9;
+}
