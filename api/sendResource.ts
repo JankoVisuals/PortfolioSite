@@ -8,7 +8,9 @@ import { createClient } from "@supabase/supabase-js";
 const {
   SUPABASE_URL,
   SUPABASE_SERVICE_ROLE_KEY,
-  RESOURCES_BUCKET = "resources",
+  // Ako hoćeš da forsiraš jedan bucket, setuj RESOURCES_BUCKET u Vercel env.
+  // Ako nije setovan, handler će automatski pronaći bucket gde postoji fajl.
+  RESOURCES_BUCKET,
   MAIL_FROM_EMAIL,
   GMAIL_APP_PASS,
 } = process.env;
@@ -17,11 +19,48 @@ const {
 const RESOURCE_MAP: Record<string, string> = {
   "sfx": "SFX.zip",
   "cineslog3-luts": "CineSlog3 LUTs.zip",
+  "custom-luts": "Custom Luts.zip",
 };
 
 async function getMailer() {
   const nodemailer = await import("nodemailer");
   return nodemailer.default;
+}
+
+function uniq(arr: string[]) {
+  return Array.from(new Set(arr.filter(Boolean)));
+}
+
+async function resolveSignedUrl(
+  supabase: ReturnType<typeof createClient>,
+  filename: string,
+  preferredBucket?: string
+) {
+  const candidatesBase = uniq([
+    preferredBucket || "",
+    "resources",
+    "public",
+    "assets",
+    "files",
+    "downloads",
+    "videos",
+  ]);
+
+  const buckets = await supabase.storage.listBuckets();
+  if (buckets.error) throw buckets.error;
+  const allBuckets = (buckets.data || []).map((b) => b.name);
+
+  const candidates = uniq([...candidatesBase, ...allBuckets]);
+  const path = filename;
+
+  for (const bucket of candidates) {
+    const signed = await supabase.storage.from(bucket).createSignedUrl(path, 60 * 60 * 24);
+    if (!signed.error && signed.data?.signedUrl) {
+      return { url: signed.data.signedUrl, bucket };
+    }
+  }
+
+  throw new Error(`File not found in Supabase Storage: ${filename}`);
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -51,22 +90,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       auth: { persistSession: false },
     });
 
-    // Pokušaj public URL-a; ako bucket nije public, napravi signed URL
-    const path = `${filename}`;
-    let fileURL: string | null = null;
-
-    // Prvo probaj public
-    const pub = supabase.storage.from(RESOURCES_BUCKET).getPublicUrl(path);
-    if (pub?.data?.publicUrl) {
-      fileURL = pub.data.publicUrl;
-    }
-
-    // Ako nije public ili želiš kontrolisano deljenje, koristi signed URL (važi 24h)
-    if (!fileURL) {
-      const signed = await supabase.storage.from(RESOURCES_BUCKET).createSignedUrl(path, 60 * 60 * 24);
-      if (signed.error) throw signed.error;
-      fileURL = signed.data.signedUrl;
-    }
+    // Uvek šaljemo signed URL (važi 24h) i automatski pronalazimo bucket gde je fajl.
+    const { url: fileURL, bucket: foundBucket } = await resolveSignedUrl(
+      supabase,
+      filename,
+      RESOURCES_BUCKET
+    );
 
     // Zapiši zahtev u tabelu (ako postoji)
     try {
@@ -74,6 +103,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         email,
         resource_slug,
         filename,
+        bucket: foundBucket,
         user_agent: req.headers["user-agent"] || null,
         ip: (req.headers["x-forwarded-for"] as string)?.split(",")[0] || null,
       });

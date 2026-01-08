@@ -8,7 +8,7 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = form.email.value.trim();
-    const resource_slug = form.resource.value; // "sfx" | "cineslog3-luts"
+    const     const resource_slug = form.resource.value; // "custom-luts"
 
     if (!email) { 
       status.textContent = "Unesi validan email."; 
